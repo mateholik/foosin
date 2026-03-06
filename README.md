@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Foosball Tracker (MVP)
 
-## Getting Started
+Simple self-hosted foosball score tracker for 2v2 matches.
 
-First, run the development server:
+## MVP Features
+
+- No authentication
+- Start a 2v2 game by selecting existing players or creating new ones
+- Submit final score
+- Leaderboard with wins, losses, games played, win rate
+- Recent games list
+- Best teammate ranking (included as a bonus section)
+
+## Stack
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Supabase (`@supabase/supabase-js`)
+
+## 1) Local Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Copy environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+Set your Supabase values in `.env.local`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 2) Supabase Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Run SQL from `supabase/schema.sql` in your Supabase SQL editor.
 
-## Learn More
+This creates:
+- `players`
+- `games`
 
-To learn more about Next.js, take a look at the following resources:
+Note: your draft schema had `player_b_b2`; the app and schema use `player_b2`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 3) Build and Run
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+npm run build
+npm start
+```
 
-## Deploy on Vercel
+## 4) DigitalOcean Deployment (Manual)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Install on droplet:
+- `node`
+- `npm`
+- `pm2` (optional)
+- `nginx`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Run app:
+
+```bash
+npm install
+npm run build
+npm start
+```
+
+Optional PM2:
+
+```bash
+pm2 start npm --name foosball -- start
+```
+
+## 5) Nginx Reverse Proxy
+
+Example server block:
+
+```nginx
+server {
+  server_name foosball.yourdomain.com;
+
+  location / {
+    proxy_pass http://localhost:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+  }
+}
+```
+
+References:
+- [Supabase Next.js Quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs)
+- [PM2 Quick Start](https://pm2.keymetrics.io/docs/usage/quick-start/)
+- [Nginx Docs](https://nginx.org/en/docs/)
