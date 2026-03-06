@@ -22,12 +22,13 @@ async function getPlayersByIds(ids: string[]) {
 export default async function FinishPage({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }) {
-  const playerA1 = searchParams.playerA1;
-  const playerA2 = searchParams.playerA2;
-  const playerB1 = searchParams.playerB1;
-  const playerB2 = searchParams.playerB2;
+  const resolvedSearchParams = await searchParams;
+  const playerA1 = resolvedSearchParams.playerA1;
+  const playerA2 = resolvedSearchParams.playerA2;
+  const playerB1 = resolvedSearchParams.playerB1;
+  const playerB2 = resolvedSearchParams.playerB2;
 
   const ids = [playerA1, playerA2, playerB1, playerB2];
   if (ids.some((id) => !id)) {
