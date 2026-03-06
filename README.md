@@ -37,6 +37,8 @@ Set your Supabase values in `.env.local`:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# or (Supabase dashboard naming):
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_publishable_key
 ```
 
 Run development server:
@@ -49,7 +51,7 @@ App runs at [http://localhost:3000](http://localhost:3000).
 
 ## 2) Supabase Setup
 
-Run SQL from `supabase/schema.sql` in your Supabase SQL editor.
+Run SQL from `supabase/schema.sql` in your Supabase SQL editor, then run `supabase/seed.sql`.
 
 This creates:
 - `players`
