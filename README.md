@@ -61,11 +61,13 @@ This creates:
 
 Note: your draft schema had `player_b_b2`; the app and schema use `player_b2`.
 
-## 3) Build and Run
+## 3) Build and Run (Standalone)
 
 ```bash
 npm run build
-npm start
+cp -R public .next/standalone/
+cp -R .next/static .next/standalone/.next/
+node .next/standalone/server.js
 ```
 
 `/admin` uses `ADMIN_PASSWORD`. Anyone with that password can log in and edit/delete games.
@@ -83,13 +85,15 @@ Run app:
 ```bash
 npm install
 npm run build
-npm start
+cp -R public .next/standalone/
+cp -R .next/static .next/standalone/.next/
+node .next/standalone/server.js
 ```
 
 Optional PM2:
 
 ```bash
-pm2 start npm --name foosball -- start
+pm2 start .next/standalone/server.js --name foosball
 ```
 
 ## 5) Nginx Reverse Proxy
@@ -114,3 +118,9 @@ References:
 - [Supabase Next.js Quickstart](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs)
 - [PM2 Quick Start](https://pm2.keymetrics.io/docs/usage/quick-start/)
 - [Nginx Docs](https://nginx.org/en/docs/)
+
+
+Copy standalone build files to DO server. .next folder should exist in www/foosin
+scp -r .next/standalone root@161.35.22.48:/var/www/foosin/.next/
+scp -r .next/static root@161.35.22.48:/var/www/foosin/.next/
+scp -r public root@161.35.22.48:/var/www/foosin/
