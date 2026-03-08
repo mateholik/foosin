@@ -45,13 +45,13 @@ export default async function FinishPage({
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 px-4 py-10 sm:px-6">
-      <header className="space-y-3">
-        <Link href="/start" className="text-sm text-zinc-600 hover:text-zinc-900">
+    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-5 px-3 py-6 sm:px-6 sm:py-10">
+      <header className="brut-panel space-y-3">
+        <Link href="/start" className="brut-link">
           ← Back to Start Game
         </Link>
-        <h1 className="text-4xl font-bold tracking-tight">Finish Game</h1>
-        <p className="text-sm text-zinc-600">Enter final score and save the match.</p>
+        <h1 className="text-4xl font-black uppercase leading-none sm:text-5xl">Finish Game</h1>
+        <p className="text-sm font-bold">Enter final score and save the match.</p>
       </header>
       <ScoreForm
         playerA1={playerA1!}

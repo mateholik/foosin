@@ -48,13 +48,13 @@ export default async function AdminPage() {
   const games = isAdmin ? await getAdminGames() : [];
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-10 sm:px-6">
-      <header className="space-y-3">
-        <Link href="/" className="text-sm text-zinc-600 hover:text-zinc-900">
+    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-3 py-6 sm:px-6 sm:py-10">
+      <header className="brut-panel space-y-3">
+        <Link href="/" className="brut-link">
           ← Back to Leaderboard
         </Link>
-        <h1 className="text-4xl font-bold tracking-tight">Admin</h1>
-        <p className="text-sm text-zinc-600">Edit or delete games with the shared admin password.</p>
+        <h1 className="text-4xl font-black uppercase leading-none sm:text-5xl">Admin</h1>
+        <p className="text-sm font-bold">Edit or delete games with the shared admin password.</p>
       </header>
 
       {isAdmin ? <AdminGamesTable games={games} /> : <AdminLoginForm />}

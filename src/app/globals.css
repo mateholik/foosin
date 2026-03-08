@@ -1,21 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  --foreground-rgb: 17, 24, 39;
-  --background-start-rgb: 243, 244, 246;
-  --background-end-rgb: 236, 253, 245;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 245, 157;
+  --background-end-rgb: 255, 224, 102;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 17, 24, 39;
-    --background-start-rgb: 243, 244, 246;
-    --background-end-rgb: 236, 253, 245;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 255, 245, 157;
+    --background-end-rgb: 255, 224, 102;
   }
 }
 
 body {
   min-height: 100vh;
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(155deg, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
+  font-family: "Arial Black", Impact, "Segoe UI", sans-serif;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.08) 0,
+      rgba(0, 0, 0, 0.08) 2px,
+      transparent 2px,
+      transparent 18px
+    ),
+    linear-gradient(155deg, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
+}
+
+@layer components {
+  .brut-panel {
+    @apply border-4 border-black bg-white p-4 shadow-[7px_7px_0_0_#000] sm:p-6;
+  }
+
+  .brut-btn {
+    @apply inline-flex items-center justify-center border-4 border-black px-4 py-2 text-sm font-black uppercase tracking-wide transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  }
+
+  .brut-btn-primary {
+    @apply inline-flex items-center justify-center border-4 border-black bg-[#00d26a] px-4 py-2 text-sm font-black uppercase tracking-wide text-black shadow-[4px_4px_0_0_#000] transition hover:bg-[#00b85d] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  }
+
+  .brut-btn-danger {
+    @apply inline-flex items-center justify-center border-4 border-black bg-[#ff584f] px-4 py-2 text-sm font-black uppercase tracking-wide text-black shadow-[4px_4px_0_0_#000] transition hover:bg-[#ff3b30] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  }
+
+  .brut-btn-neutral {
+    @apply inline-flex items-center justify-center border-4 border-black bg-white px-4 py-2 text-sm font-black uppercase tracking-wide text-black shadow-[4px_4px_0_0_#000] transition hover:bg-zinc-100 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  }
+
+  .brut-input {
+    @apply w-full border-4 border-black bg-white px-3 py-2 text-sm font-semibold outline-none;
+  }
+
+  .brut-input:focus {
+    @apply bg-lime-100;
+  }
+
+  .brut-link {
+    @apply text-xs font-black uppercase tracking-wide underline decoration-4 underline-offset-4;
+  }
 }

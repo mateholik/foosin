@@ -33,31 +33,16 @@ export default async function HomePage() {
   const teammateRows = computeBestTeammates(players, games);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-10 sm:px-6 lg:px-8">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Foosball Tracker</h1>
-          <p className="mt-2 text-sm text-zinc-600">Track 2v2 match outcomes and standings.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin"
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-          >
-            Admin
-          </Link>
-          <Link
-            href="/start"
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500"
-          >
-            Start Game
-          </Link>
-        </div>
-      </header>
-
+    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-3 py-6 pb-28 sm:px-6 sm:py-10 sm:pb-32">
       <Leaderboard rows={leaderboardRows} />
       <RecentGames games={recentGames} />
       <BestTeammates rows={teammateRows} />
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-5xl p-3 sm:p-6">
+        <Link href="/start" className="brut-btn-primary pointer-events-auto w-full text-lg">
+          Start Game
+        </Link>
+      </div>
     </main>
   );
 }

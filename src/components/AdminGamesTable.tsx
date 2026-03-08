@@ -92,61 +92,61 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
   };
 
   return (
-    <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+    <section className="brut-panel space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold">Manage Games</h2>
+        <h2 className="text-2xl font-black uppercase">Manage Games</h2>
         <button
           type="button"
           onClick={onLogout}
           disabled={busyGameId === "logout"}
-          className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60"
+          className="brut-btn-neutral disabled:cursor-not-allowed disabled:opacity-60"
         >
           Logout
         </button>
       </div>
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm font-black text-red-700">{error}</p> : null}
 
       {games.length === 0 ? (
-        <p className="text-sm text-zinc-500">No games found.</p>
+        <p className="text-sm font-bold">No games found.</p>
       ) : (
         <div className="space-y-3">
           {games.map((game) => (
             <form
               key={game.id}
               onSubmit={(event) => onSave(event, game.id)}
-              className="grid gap-3 rounded-lg border border-zinc-200 p-4 sm:grid-cols-[1.4fr_1fr_1fr_auto_auto]"
+              className="grid gap-3 border-4 border-black bg-zinc-100 p-3 lg:grid-cols-[1.4fr_1fr_1fr_auto_auto]"
             >
               <div>
-                <p className="text-sm font-medium">{game.teamA}</p>
-                <p className="text-xs text-zinc-500">vs {game.teamB}</p>
-                <p className="mt-1 text-xs text-zinc-500">{formatDate(game.createdAt)}</p>
+                <p className="text-sm font-black uppercase">{game.teamA}</p>
+                <p className="text-xs font-bold uppercase">vs {game.teamB}</p>
+                <p className="mt-1 text-xs font-bold uppercase">{formatDate(game.createdAt)}</p>
               </div>
               <label className="space-y-1">
-                <span className="text-xs text-zinc-600">Score A</span>
+                <span className="text-xs font-black uppercase">Score A</span>
                 <input
                   type="number"
                   name="scoreA"
                   min={0}
                   defaultValue={game.scoreA}
-                  className="w-full rounded-lg border border-zinc-300 px-2 py-1.5 text-sm outline-none ring-emerald-500 transition focus:ring-2"
+                  className="brut-input"
                   required
                 />
               </label>
               <label className="space-y-1">
-                <span className="text-xs text-zinc-600">Score B</span>
+                <span className="text-xs font-black uppercase">Score B</span>
                 <input
                   type="number"
                   name="scoreB"
                   min={0}
                   defaultValue={game.scoreB}
-                  className="w-full rounded-lg border border-zinc-300 px-2 py-1.5 text-sm outline-none ring-emerald-500 transition focus:ring-2"
+                  className="brut-input"
                   required
                 />
               </label>
               <button
                 type="submit"
                 disabled={busyGameId === game.id}
-                className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="brut-btn-primary disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Save
               </button>
@@ -154,7 +154,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
                 type="button"
                 onClick={() => onDelete(game.id)}
                 disabled={busyGameId === game.id}
-                className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="brut-btn-danger disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Delete
               </button>

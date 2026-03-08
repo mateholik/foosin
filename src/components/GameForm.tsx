@@ -88,10 +88,10 @@ export function GameForm({ players }: GameFormProps) {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-6 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+    <form onSubmit={submit} className="brut-panel space-y-6">
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Team A</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <h2 className="text-2xl font-black uppercase">Team A</h2>
+        <div className="grid gap-4">
           <PlayerSelect
             id="teamA1"
             label="Player A1"
@@ -110,8 +110,8 @@ export function GameForm({ players }: GameFormProps) {
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Team B</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <h2 className="text-2xl font-black uppercase">Team B</h2>
+        <div className="grid gap-4">
           <PlayerSelect
             id="teamB1"
             label="Player B1"
@@ -129,12 +129,12 @@ export function GameForm({ players }: GameFormProps) {
         </div>
       </div>
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm font-black text-red-700">{error}</p> : null}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+        className="brut-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Starting..." : "Start Game"}
       </button>

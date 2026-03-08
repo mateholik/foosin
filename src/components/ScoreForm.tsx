@@ -68,43 +68,43 @@ export function ScoreForm({
   };
 
   return (
-    <form onSubmit={submit} className="space-y-6 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+    <form onSubmit={submit} className="brut-panel space-y-6">
       <div className="space-y-1">
-        <p className="text-lg font-semibold">{teamALabel}</p>
-        <p className="text-sm text-zinc-500">vs</p>
-        <p className="text-lg font-semibold">{teamBLabel}</p>
+        <p className="text-base font-black uppercase">{teamALabel}</p>
+        <p className="text-sm font-bold uppercase">vs</p>
+        <p className="text-base font-black uppercase">{teamBLabel}</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+      <div className="grid gap-4">
         <label className="space-y-1">
-          <span className="text-sm font-medium text-zinc-700">Team A Score</span>
+          <span className="text-xs font-black uppercase">Team A Score</span>
           <input
             type="number"
             min={0}
             value={scoreA}
             onChange={(event) => setScoreA(event.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-lg outline-none ring-emerald-500 transition focus:ring-2"
+            className="brut-input text-2xl font-black"
           />
         </label>
-        <span className="text-center text-xl font-semibold text-zinc-500">-</span>
+        <span className="text-center text-2xl font-black">-</span>
         <label className="space-y-1">
-          <span className="text-sm font-medium text-zinc-700">Team B Score</span>
+          <span className="text-xs font-black uppercase">Team B Score</span>
           <input
             type="number"
             min={0}
             value={scoreB}
             onChange={(event) => setScoreB(event.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-lg outline-none ring-emerald-500 transition focus:ring-2"
+            className="brut-input text-2xl font-black"
           />
         </label>
       </div>
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm font-black text-red-700">{error}</p> : null}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+        className="brut-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Saving..." : "Submit Score"}
       </button>
