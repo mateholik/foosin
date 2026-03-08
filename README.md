@@ -10,12 +10,13 @@ Simple self-hosted foosball score tracker for 2v2 matches.
 - Leaderboard with wins, losses, games played, win rate
 - Recent games list
 - Best teammate ranking (included as a bonus section)
+- `/admin` shared-password access for editing/deleting games
 
 ## Stack
 
-- Next.js 14 (App Router)
+- Next.js 16 (App Router)
 - TypeScript
-- Tailwind CSS
+- Tailwind CSS 4
 - Supabase (`@supabase/supabase-js`)
 
 ## 1) Local Setup
@@ -39,6 +40,7 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 # or (Supabase dashboard naming):
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_publishable_key
+ADMIN_PASSWORD=replace_with_shared_admin_password
 ```
 
 Run development server:
@@ -65,6 +67,8 @@ Note: your draft schema had `player_b_b2`; the app and schema use `player_b2`.
 npm run build
 npm start
 ```
+
+`/admin` uses `ADMIN_PASSWORD`. Anyone with that password can log in and edit/delete games.
 
 ## 4) DigitalOcean Deployment (Manual)
 

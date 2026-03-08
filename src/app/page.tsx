@@ -39,12 +39,20 @@ export default async function HomePage() {
           <h1 className="text-4xl font-bold tracking-tight">Foosball Tracker</h1>
           <p className="mt-2 text-sm text-zinc-600">Track 2v2 match outcomes and standings.</p>
         </div>
-        <Link
-          href="/start"
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500"
-        >
-          Start Game
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin"
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
+          >
+            Admin
+          </Link>
+          <Link
+            href="/start"
+            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500"
+          >
+            Start Game
+          </Link>
+        </div>
       </header>
 
       <Leaderboard rows={leaderboardRows} />
