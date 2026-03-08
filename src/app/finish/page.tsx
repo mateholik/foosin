@@ -50,8 +50,10 @@ export default async function FinishPage({
         <Link href="/start" className="brut-link">
           ← Back to Start Game
         </Link>
-        <h1 className="text-4xl font-black uppercase leading-none sm:text-5xl">Finish Game</h1>
-        <p className="text-sm font-bold">Enter final score and save the match.</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+          Finish Game
+        </h1>
+        <p className="text-sm leading-6 text-zinc-600">Enter final score and save the match.</p>
       </header>
       <ScoreForm
         playerA1={playerA1!}

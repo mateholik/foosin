@@ -37,9 +37,9 @@ export function AdminLoginForm() {
 
   return (
     <form onSubmit={submit} className="brut-panel space-y-4">
-      <h2 className="text-2xl font-black uppercase">Admin Login</h2>
+      <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Admin Login</h2>
       <label className="space-y-1">
-        <span className="text-xs font-black uppercase">Password</span>
+        <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">Password</span>
         <input
           type="password"
           value={password}
@@ -48,7 +48,7 @@ export function AdminLoginForm() {
           required
         />
       </label>
-      {error ? <p className="text-sm font-black text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
       <button
         type="submit"
         disabled={isSubmitting}

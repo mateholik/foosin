@@ -20,8 +20,10 @@ export default async function StartPage() {
         <Link href="/" className="brut-link">
           ← Back to Leaderboard
         </Link>
-        <h1 className="text-4xl font-black uppercase leading-none sm:text-5xl">Start Game</h1>
-        <p className="text-sm font-bold">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+          Start Game
+        </h1>
+        <p className="text-sm leading-6 text-zinc-600">
           Pick two players per team. New names are created automatically.
         </p>
       </header>

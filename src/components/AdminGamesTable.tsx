@@ -94,7 +94,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
   return (
     <section className="brut-panel space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-black uppercase">Manage Games</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Manage Games</h2>
         <button
           type="button"
           onClick={onLogout}
@@ -104,25 +104,29 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
           Logout
         </button>
       </div>
-      {error ? <p className="text-sm font-black text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
 
       {games.length === 0 ? (
-        <p className="text-sm font-bold">No games found.</p>
+        <p className="text-sm text-zinc-600">No games found.</p>
       ) : (
         <div className="space-y-3">
           {games.map((game) => (
             <form
               key={game.id}
               onSubmit={(event) => onSave(event, game.id)}
-              className="grid gap-3 border-4 border-black bg-zinc-100 p-3 lg:grid-cols-[1.4fr_1fr_1fr_auto_auto]"
+              className="grid gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4 lg:grid-cols-[1.4fr_1fr_1fr_auto_auto]"
             >
               <div>
-                <p className="text-sm font-black uppercase">{game.teamA}</p>
-                <p className="text-xs font-bold uppercase">vs {game.teamB}</p>
-                <p className="mt-1 text-xs font-bold uppercase">{formatDate(game.createdAt)}</p>
+                <p className="text-sm font-semibold text-zinc-900">{game.teamA}</p>
+                <p className="text-xs text-zinc-500">vs {game.teamB}</p>
+                <p className="mt-1 text-xs uppercase tracking-wide text-zinc-500">
+                  {formatDate(game.createdAt)}
+                </p>
               </div>
               <label className="space-y-1">
-                <span className="text-xs font-black uppercase">Score A</span>
+                <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">
+                  Score A
+                </span>
                 <input
                   type="number"
                   name="scoreA"
@@ -133,7 +137,9 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
                 />
               </label>
               <label className="space-y-1">
-                <span className="text-xs font-black uppercase">Score B</span>
+                <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">
+                  Score B
+                </span>
                 <input
                   type="number"
                   name="scoreB"

@@ -68,38 +68,38 @@ export function ScoreForm({
   };
 
   return (
-    <form onSubmit={submit} className="brut-panel space-y-6">
+    <form onSubmit={submit} className="brut-panel space-y-7">
       <div className="space-y-1">
-        <p className="text-base font-black uppercase">{teamALabel}</p>
-        <p className="text-sm font-bold uppercase">vs</p>
-        <p className="text-base font-black uppercase">{teamBLabel}</p>
+        <p className="text-lg font-semibold text-zinc-900">{teamALabel}</p>
+        <p className="text-sm text-zinc-500">vs</p>
+        <p className="text-lg font-semibold text-zinc-900">{teamBLabel}</p>
       </div>
 
       <div className="grid gap-4">
         <label className="space-y-1">
-          <span className="text-xs font-black uppercase">Team A Score</span>
+          <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">Team A Score</span>
           <input
             type="number"
             min={0}
             value={scoreA}
             onChange={(event) => setScoreA(event.target.value)}
-            className="brut-input text-2xl font-black"
+            className="brut-input text-2xl font-semibold"
           />
         </label>
-        <span className="text-center text-2xl font-black">-</span>
+        <span className="text-center text-2xl font-semibold text-zinc-400">-</span>
         <label className="space-y-1">
-          <span className="text-xs font-black uppercase">Team B Score</span>
+          <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">Team B Score</span>
           <input
             type="number"
             min={0}
             value={scoreB}
             onChange={(event) => setScoreB(event.target.value)}
-            className="brut-input text-2xl font-black"
+            className="brut-input text-2xl font-semibold"
           />
         </label>
       </div>
 
-      {error ? <p className="text-sm font-black text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
 
       <button
         type="submit"

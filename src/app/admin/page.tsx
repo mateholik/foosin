@@ -53,8 +53,12 @@ export default async function AdminPage() {
         <Link href="/" className="brut-link">
           ← Back to Leaderboard
         </Link>
-        <h1 className="text-4xl font-black uppercase leading-none sm:text-5xl">Admin</h1>
-        <p className="text-sm font-bold">Edit or delete games with the shared admin password.</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+          Admin
+        </h1>
+        <p className="text-sm leading-6 text-zinc-600">
+          Edit or delete games with the shared admin password.
+        </p>
       </header>
 
       {isAdmin ? <AdminGamesTable games={games} /> : <AdminLoginForm />}
