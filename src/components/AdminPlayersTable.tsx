@@ -73,11 +73,11 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
 
   return (
     <section className="brut-panel space-y-4">
-      <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Manage Players</h2>
-      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+      <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Manage Players</h2>
+      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       {players.length === 0 ? (
-        <p className="text-sm text-zinc-600">No players found.</p>
+        <p className="text-sm text-slate-300">No players found.</p>
       ) : (
         <div className="space-y-3">
           {players.map((player) => {
@@ -87,16 +87,16 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
               <form
                 key={player.id}
                 onSubmit={(event) => onRename(event, player.id)}
-                className="grid gap-3 rounded-xl border border-zinc-200 bg-zinc-50 p-4 lg:grid-cols-[1.1fr_1fr_auto_auto]"
+                className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.1fr_1fr_auto_auto]"
               >
                 <div>
-                  <p className="text-sm font-semibold text-zinc-900">{player.name}</p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-sm font-semibold text-slate-100">{player.name}</p>
+                  <p className="text-xs text-slate-400">
                     {player.gamesCount} game{player.gamesCount === 1 ? "" : "s"}
                   </p>
                 </div>
                 <label className="space-y-1">
-                  <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">
+                  <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                     Rename
                   </span>
                   <input

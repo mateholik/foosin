@@ -34,12 +34,15 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-3 py-6 pb-28 sm:px-6 sm:py-10 sm:pb-32">
-      <Link href="/info" className="brut-link self-start">
-        How stats work
-      </Link>
-      <Leaderboard rows={leaderboardRows} />
-      <RecentGames games={recentGames} />
-      <BestTeammates rows={teammateRows} />
+      <section id="leaderboard" className="scroll-mt-24">
+        <Leaderboard rows={leaderboardRows} />
+      </section>
+      <section id="best-teams" className="scroll-mt-24">
+        <BestTeammates rows={teammateRows} />
+      </section>
+      <section id="recent-games" className="scroll-mt-24">
+        <RecentGames games={recentGames} />
+      </section>
 
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-5xl p-3 sm:p-6">
         <Link href="/start" className="brut-btn-primary pointer-events-auto w-full text-lg">

@@ -91,14 +91,14 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-3 py-6 sm:px-6 sm:py-10">
-      <header className="brut-panel space-y-3">
+      <header className="brut-panel space-y-5">
         <Link href="/" className="brut-link">
           ← Back to Leaderboard
         </Link>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-100 sm:text-4xl">
           Admin
         </h1>
-        <p className="text-sm leading-6 text-zinc-600">
+        <p className="text-sm leading-6 text-slate-300">
           Edit or delete games with the shared admin password.
         </p>
       </header>

@@ -1,23 +1,15 @@
-import Link from "next/link";
-
 export default function InfoPage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-3 py-6 sm:px-6 sm:py-10">
-      <header className="brut-panel space-y-3">
-        <Link href="/" className="brut-link">
-          ← Back to Leaderboard
-        </Link>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-          How Stats Work
-        </h1>
-        <p className="text-sm leading-6 text-zinc-600">
-          Quick guide to what each stat means and how it is calculated.
-        </p>
+    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-4 px-3 py-5 sm:gap-5 sm:px-6 sm:py-8">
+      <header className="px-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">How Stats Work</h1>
       </header>
 
       <section className="brut-panel space-y-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Leaderboard Stats</h2>
-        <ul className="space-y-2 text-sm leading-6 text-zinc-700">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-100 sm:text-2xl">
+          Leaderboard Stats
+        </h2>
+        <ul className="space-y-2 text-sm leading-6 text-slate-300">
           <li>
             <strong>Wins:</strong> +1 when your team score is higher than opponent score.
           </li>
@@ -37,8 +29,10 @@ export default function InfoPage() {
       </section>
 
       <section className="brut-panel space-y-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Elo (Simple)</h2>
-        <ul className="space-y-2 text-sm leading-6 text-zinc-700">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-100 sm:text-2xl">
+          Elo (Simple)
+        </h2>
+        <ul className="space-y-2 text-sm leading-6 text-slate-300">
           <li>
             <strong>1) Everyone starts at 1000</strong>
           </li>
@@ -85,8 +79,10 @@ export default function InfoPage() {
       </section>
 
       <section className="brut-panel space-y-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Other Sections</h2>
-        <ul className="space-y-2 text-sm leading-6 text-zinc-700">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-100 sm:text-2xl">
+          Other Sections
+        </h2>
+        <ul className="space-y-2 text-sm leading-6 text-slate-300">
           <li>
             <strong>Recent Games:</strong> Latest 10 matches, newest first.
           </li>

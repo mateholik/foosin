@@ -33,8 +33,8 @@ export function PlayerSelect({ id, label, players, value, onChange }: PlayerSele
   }, [players, safeValue]);
 
   return (
-    <label htmlFor={id} className="relative space-y-1">
-      <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">{label}</span>
+    <label htmlFor={id} className="relative block space-y-2">
+      <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">{label}</span>
       <Combobox
         value={safeValue}
         onChange={(nextValue) => onChange(nextValue ?? "")}
@@ -52,13 +52,13 @@ export function PlayerSelect({ id, label, players, value, onChange }: PlayerSele
         <ComboboxOptions
           anchor="bottom"
           transition
-          className="z-20 mt-2 max-h-60 w-[var(--input-width)] overflow-auto rounded-xl border border-zinc-200 bg-white p-1 shadow-lg [--anchor-gap:4px] empty:invisible transition duration-100 data-[closed]:opacity-0"
+          className="z-20 mt-2 max-h-60 w-[var(--input-width)] overflow-auto rounded-xl border border-white/10 bg-[#171d2b] p-1 shadow-xl [--anchor-gap:4px] empty:invisible transition duration-100 data-[closed]:opacity-0"
         >
           {filteredPlayers.map((player) => (
             <ComboboxOption
               key={player.id}
               value={player.name}
-              className="cursor-pointer rounded-lg px-3 py-2 text-sm text-zinc-700 data-[focus]:bg-emerald-50 data-[focus]:text-emerald-700"
+              className="cursor-pointer rounded-lg px-3 py-2 text-sm text-slate-200 data-[focus]:bg-[rgba(237,241,64,0.18)] data-[focus]:text-white"
             >
               {player.name}
             </ComboboxOption>
@@ -66,7 +66,7 @@ export function PlayerSelect({ id, label, players, value, onChange }: PlayerSele
           {safeValue.trim() && !hasExactMatch ? (
             <ComboboxOption
               value={safeValue.trim()}
-              className="cursor-pointer rounded-lg px-3 py-2 text-sm font-medium text-zinc-700 data-[focus]:bg-emerald-50 data-[focus]:text-emerald-700"
+              className="cursor-pointer rounded-lg px-3 py-2 text-sm font-medium text-slate-200 data-[focus]:bg-[rgba(237,241,64,0.18)] data-[focus]:text-white"
             >
               Use &quot;{safeValue.trim()}&quot; (new)
             </ComboboxOption>

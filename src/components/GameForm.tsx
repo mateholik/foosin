@@ -88,9 +88,9 @@ export function GameForm({ players }: GameFormProps) {
   };
 
   return (
-    <form onSubmit={submit} className="brut-panel space-y-7">
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-zinc-900">Team A</h2>
+    <form onSubmit={submit} className="brut-panel space-y-5 sm:space-y-6">
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold text-slate-100 sm:text-xl">Team A</h2>
         <div className="grid gap-4">
           <PlayerSelect
             id="teamA1"
@@ -109,8 +109,8 @@ export function GameForm({ players }: GameFormProps) {
         </div>
       </div>
 
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-zinc-900">Team B</h2>
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold text-slate-100 sm:text-xl">Team B</h2>
         <div className="grid gap-4">
           <PlayerSelect
             id="teamB1"
@@ -129,7 +129,7 @@ export function GameForm({ players }: GameFormProps) {
         </div>
       </div>
 
-      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       <button
         type="submit"

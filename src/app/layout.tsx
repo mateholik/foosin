@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import type { Metadata } from "next";
+import { HomeStickyHeader } from "@/components/HomeStickyHeader";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +15,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans">{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="pt-16 sm:pt-20">
+        <HomeStickyHeader />
+        {children}
+      </body>
     </html>
   );
 }

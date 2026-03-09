@@ -36,10 +36,10 @@ export function AdminLoginForm() {
   };
 
   return (
-    <form onSubmit={submit} className="brut-panel space-y-4">
-      <h2 className="text-2xl font-semibold tracking-tight text-zinc-900">Admin Login</h2>
-      <label className="space-y-1">
-        <span className="text-xs font-medium uppercase tracking-wide text-zinc-500">Password</span>
+    <form onSubmit={submit} className="brut-panel space-y-6">
+      <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Admin Login</h2>
+      <label className="flex flex-col gap-2">
+        <span className="text-xs font-medium uppercase tracking-wide text-slate-400">Password</span>
         <input
           type="password"
           value={password}
@@ -48,11 +48,11 @@ export function AdminLoginForm() {
           required
         />
       </label>
-      {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
       <button
         type="submit"
         disabled={isSubmitting}
-        className="brut-btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
+        className="brut-btn-primary mt-1 w-full disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Signing in..." : "Sign In"}
       </button>

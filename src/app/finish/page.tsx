@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ScoreForm } from "@/components/ScoreForm";
 import { assertSupabaseEnv, supabase } from "@/lib/supabase";
@@ -45,15 +44,9 @@ export default async function FinishPage({
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-5 px-3 py-6 sm:px-6 sm:py-10">
-      <header className="brut-panel space-y-3">
-        <Link href="/start" className="brut-link">
-          ← Back to Start Game
-        </Link>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-          Finish Game
-        </h1>
-        <p className="text-sm leading-6 text-zinc-600">Enter final score and save the match.</p>
+    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-4 px-3 py-5 sm:gap-5 sm:px-6 sm:py-8">
+      <header className="px-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">Finish Game</h1>
       </header>
       <ScoreForm
         playerA1={playerA1!}
