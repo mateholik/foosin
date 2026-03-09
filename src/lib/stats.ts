@@ -7,6 +7,7 @@ export type LeaderboardRow = {
   losses: number;
   gamesPlayed: number;
   winRate: number;
+  rating: number;
 };
 
 export type RecentGameRow = {
@@ -28,19 +29,35 @@ export type TeammateRow = {
 };
 
 export function computeLeaderboard(players: Player[], games: Game[]): LeaderboardRow[] {
+  const BASE_ELO = 1000;
+  const K_FACTOR = 24;
   const rows = new Map<
     string,
-    { name: string; wins: number; losses: number; gamesPlayed: number }
+    { name: string; wins: number; losses: number; gamesPlayed: number; rating: number }
   >();
 
   for (const player of players) {
-    rows.set(player.id, { name: player.name, wins: 0, losses: 0, gamesPlayed: 0 });
+    rows.set(player.id, {
+      name: player.name,
+      wins: 0,
+      losses: 0,
+      gamesPlayed: 0,
+      rating: BASE_ELO,
+    });
   }
 
-  for (const game of games) {
+  const gamesByTime = [...games].sort(
+    (first, second) =>
+      new Date(first.created_at).getTime() - new Date(second.created_at).getTime()
+  );
+
+  for (const game of gamesByTime) {
     const teamA = [game.player_a1, game.player_a2];
     const teamB = [game.player_b1, game.player_b2];
-    const teamAWon = game.score_a > game.score_b;
+    const teamAScore = game.score_a > game.score_b ? 1 : game.score_a < game.score_b ? 0 : 0.5;
+    const teamBScore = 1 - teamAScore;
+    const isTie = teamAScore === 0.5;
+    const teamAWon = teamAScore === 1;
 
     for (const playerId of [...teamA, ...teamB]) {
       const row = rows.get(playerId);
@@ -50,15 +67,41 @@ export function computeLeaderboard(players: Player[], games: Game[]): Leaderboar
     for (const playerId of teamA) {
       const row = rows.get(playerId);
       if (!row) continue;
-      if (teamAWon) row.wins += 1;
-      else row.losses += 1;
+      if (!isTie) {
+        if (teamAWon) row.wins += 1;
+        else row.losses += 1;
+      }
     }
 
     for (const playerId of teamB) {
       const row = rows.get(playerId);
       if (!row) continue;
-      if (teamAWon) row.losses += 1;
-      else row.wins += 1;
+      if (!isTie) {
+        if (teamAWon) row.losses += 1;
+        else row.wins += 1;
+      }
+    }
+
+    const teamARatings = teamA.map((playerId) => rows.get(playerId)?.rating ?? BASE_ELO);
+    const teamBRatings = teamB.map((playerId) => rows.get(playerId)?.rating ?? BASE_ELO);
+    const teamAAverageRating = (teamARatings[0] + teamARatings[1]) / 2;
+    const teamBAverageRating = (teamBRatings[0] + teamBRatings[1]) / 2;
+
+    const expectedTeamAScore =
+      1 / (1 + 10 ** ((teamBAverageRating - teamAAverageRating) / 400));
+    const expectedTeamBScore = 1 - expectedTeamAScore;
+
+    const teamADelta = K_FACTOR * (teamAScore - expectedTeamAScore);
+    const teamBDelta = K_FACTOR * (teamBScore - expectedTeamBScore);
+
+    for (const playerId of teamA) {
+      const row = rows.get(playerId);
+      if (row) row.rating += teamADelta;
+    }
+
+    for (const playerId of teamB) {
+      const row = rows.get(playerId);
+      if (row) row.rating += teamBDelta;
     }
   }
 
@@ -70,13 +113,14 @@ export function computeLeaderboard(players: Player[], games: Game[]): Leaderboar
       losses: row.losses,
       gamesPlayed: row.gamesPlayed,
       winRate: row.gamesPlayed === 0 ? 0 : row.wins / row.gamesPlayed,
+      rating: Math.round(row.rating),
     }))
     .sort((first, second) => {
-      if (second.winRate !== first.winRate) return second.winRate - first.winRate;
+      if (second.rating !== first.rating) return second.rating - first.rating;
       if (second.gamesPlayed !== first.gamesPlayed) {
         return second.gamesPlayed - first.gamesPlayed;
       }
-      if (second.wins !== first.wins) return second.wins - first.wins;
+      if (second.winRate !== first.winRate) return second.winRate - first.winRate;
       return first.name.localeCompare(second.name);
     });
 }

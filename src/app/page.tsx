@@ -34,6 +34,9 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-3 py-6 pb-28 sm:px-6 sm:py-10 sm:pb-32">
+      <Link href="/info" className="brut-link self-start">
+        How stats work
+      </Link>
       <Leaderboard rows={leaderboardRows} />
       <RecentGames games={recentGames} />
       <BestTeammates rows={teammateRows} />
