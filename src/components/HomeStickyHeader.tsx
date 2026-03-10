@@ -15,6 +15,26 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/info", label: "Stats logic" },
 ];
 
+function FoosballShape() {
+  return (
+    <svg
+      viewBox="0 0 120 28"
+      aria-hidden="true"
+      className="h-[1.4rem] w-[5.6rem] text-[rgb(var(--accent-rgb))] opacity-90"
+      fill="none"
+    >
+      <line x1="2" y1="14" x2="118" y2="14" stroke="currentColor" strokeWidth="2.4" />
+      <rect x="28.5" y="8.5" width="15" height="11" rx="2.5" stroke="currentColor" strokeWidth="2" />
+      <circle cx="36" cy="5.5" r="4.4" stroke="currentColor" strokeWidth="2" />
+      <path d="M32.8 19.8H39.2L37.6 26.2H34.4Z" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="72.5" y="8.5" width="15" height="11" rx="2.5" stroke="currentColor" strokeWidth="2" />
+      <circle cx="80" cy="5.5" r="4.4" stroke="currentColor" strokeWidth="2" />
+      <path d="M76.8 19.8H83.2L81.6 26.2H78.4Z" stroke="currentColor" strokeWidth="2" fill="none" />
+      <circle cx="56" cy="22.5" r="4.2" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function HomeStickyHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -39,13 +59,16 @@ export function HomeStickyHeader() {
           ref={menuRef}
           className="relative flex w-full items-center justify-between"
         >
-          <Link
-            href="/"
-            className="brand-logo text-4xl tracking-wider text-[rgb(var(--accent-rgb))] transition hover:brightness-110"
-            onClick={() => setIsOpen(false)}
-          >
-            OTM
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="brand-logo text-4xl tracking-wider text-[rgb(var(--accent-rgb))] transition hover:brightness-110"
+              onClick={() => setIsOpen(false)}
+            >
+              OTM
+            </Link>
+            <FoosballShape />
+          </div>
 
           <button
             type="button"

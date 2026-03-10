@@ -5,12 +5,43 @@ type RecentGamesProps = {
 };
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(value));
+  const date = new Date(value);
+  const now = new Date();
+  const diffSeconds = Math.round((date.getTime() - now.getTime()) / 1000);
+  const absSeconds = Math.abs(diffSeconds);
+  const relativeTime = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
+
+  if (absSeconds < 60) {
+    return relativeTime.format(diffSeconds, "second");
+  }
+
+  const diffMinutes = Math.round(diffSeconds / 60);
+  if (Math.abs(diffMinutes) < 60) {
+    return relativeTime.format(diffMinutes, "minute");
+  }
+
+  const diffHours = Math.round(diffMinutes / 60);
+  if (Math.abs(diffHours) < 24) {
+    return relativeTime.format(diffHours, "hour");
+  }
+
+  const diffDays = Math.round(diffHours / 24);
+  if (Math.abs(diffDays) < 7) {
+    return relativeTime.format(diffDays, "day");
+  }
+
+  const diffWeeks = Math.round(diffDays / 7);
+  if (Math.abs(diffWeeks) < 5) {
+    return relativeTime.format(diffWeeks, "week");
+  }
+
+  const diffMonths = Math.round(diffDays / 30);
+  if (Math.abs(diffMonths) < 12) {
+    return relativeTime.format(diffMonths, "month");
+  }
+
+  const diffYears = Math.round(diffDays / 365);
+  return relativeTime.format(diffYears, "year");
 }
 
 export function RecentGames({ games }: RecentGamesProps) {
