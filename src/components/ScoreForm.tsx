@@ -4,21 +4,29 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 type ScoreFormProps = {
+  teamAId: string;
   playerA1: string;
   playerA2: string;
+  teamAName: string;
+  teamAPlayersLabel: string;
+  teamBId: string;
   playerB1: string;
   playerB2: string;
-  teamALabel: string;
-  teamBLabel: string;
+  teamBName: string;
+  teamBPlayersLabel: string;
 };
 
 export function ScoreForm({
+  teamAId,
   playerA1,
   playerA2,
+  teamAName,
+  teamAPlayersLabel,
+  teamBId,
   playerB1,
   playerB2,
-  teamALabel,
-  teamBLabel,
+  teamBName,
+  teamBPlayersLabel,
 }: ScoreFormProps) {
   const router = useRouter();
   const [scoreA, setScoreA] = useState("10");
@@ -49,8 +57,12 @@ export function ScoreForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          teamAId,
+          teamAName,
           playerA1,
           playerA2,
+          teamBId,
+          teamBName,
           playerB1,
           playerB2,
           scoreA: parsedScoreA,
@@ -70,9 +82,11 @@ export function ScoreForm({
   return (
     <form onSubmit={submit} className="brut-panel space-y-5 sm:space-y-6">
       <div className="space-y-2 rounded-xl border border-white/10 bg-black/10 p-3">
-        <p className="text-base font-semibold text-slate-100 sm:text-lg">{teamALabel}</p>
+        <p className="text-base font-semibold text-slate-100 sm:text-lg">{teamAName}</p>
+        <p className="text-sm text-slate-400">{teamAPlayersLabel}</p>
         <p className="text-xs font-medium uppercase tracking-wide text-slate-400">vs</p>
-        <p className="text-base font-semibold text-slate-100 sm:text-lg">{teamBLabel}</p>
+        <p className="text-base font-semibold text-slate-100 sm:text-lg">{teamBName}</p>
+        <p className="text-sm text-slate-400">{teamBPlayersLabel}</p>
       </div>
 
       <div className="grid gap-4">

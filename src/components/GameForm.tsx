@@ -4,15 +4,18 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import type { Player } from "@/lib/supabase";
 import { PlayerSelect } from "@/components/PlayerSelect";
+import { TeamSelect, type TeamOption } from "@/components/TeamSelect";
 
 type GameFormProps = {
   players: Pick<Player, "id" | "name">[];
+  teams: TeamOption[];
 };
 
-type PlayersResponse = {
-  players: Array<{
+type PreparedTeamsResponse = {
+  teams: Array<{
     id: string;
     name: string;
+    playerIds: [string, string];
   }>;
 };
 
@@ -20,10 +23,12 @@ function normalizeName(value: string) {
   return value.trim();
 }
 
-export function GameForm({ players }: GameFormProps) {
+export function GameForm({ players, teams }: GameFormProps) {
   const router = useRouter();
+  const [teamAName, setTeamAName] = useState("");
   const [teamA1, setTeamA1] = useState("");
   const [teamA2, setTeamA2] = useState("");
+  const [teamBName, setTeamBName] = useState("");
   const [teamB1, setTeamB1] = useState("");
   const [teamB2, setTeamB2] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,56 +38,72 @@ export function GameForm({ players }: GameFormProps) {
     () => [...players].sort((first, second) => first.name.localeCompare(second.name)),
     [players]
   );
+  const teamByName = useMemo(
+    () => new Map(teams.map((team) => [team.name.toLowerCase(), team])),
+    [teams]
+  );
+  const selectedTeamA = teamByName.get(normalizeName(teamAName).toLowerCase());
+  const selectedTeamB = teamByName.get(normalizeName(teamBName).toLowerCase());
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     setError("");
 
-    const names = [teamA1, teamA2, teamB1, teamB2].map(normalizeName);
-    if (names.some((name) => !name)) {
-      setError("All four player slots are required.");
+    const normalizedTeamAName = normalizeName(teamAName);
+    const normalizedTeamBName = normalizeName(teamBName);
+    if (!normalizedTeamAName || !normalizedTeamBName) {
+      setError("Both team names are required.");
       return;
     }
 
-    const uniqueNames = new Set(names.map((name) => name.toLowerCase()));
-    if (uniqueNames.size !== 4) {
-      setError("Pick four distinct players.");
+    if (normalizedTeamAName.toLowerCase() === normalizedTeamBName.toLowerCase()) {
+      setError("Team names must be different.");
       return;
     }
+
+    const teamAPlayers = selectedTeamA
+      ? undefined
+      : [normalizeName(teamA1), normalizeName(teamA2)];
+    const teamBPlayers = selectedTeamB
+      ? undefined
+      : [normalizeName(teamB1), normalizeName(teamB2)];
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/players", {
+      const response = await fetch("/api/teams/prepare", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ names }),
+        body: JSON.stringify({
+          teams: [
+            { name: normalizedTeamAName, playerNames: teamAPlayers },
+            { name: normalizedTeamBName, playerNames: teamBPlayers },
+          ],
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to prepare players");
+        const payload = (await response.json()) as { error?: string };
+        throw new Error(payload.error ?? "Failed to prepare teams");
       }
 
-      const data = (await response.json()) as PlayersResponse;
-      const ids = new Map(data.players.map((player) => [player.name.toLowerCase(), player.id]));
-
-      const playerA1 = ids.get(names[0].toLowerCase());
-      const playerA2 = ids.get(names[1].toLowerCase());
-      const playerB1 = ids.get(names[2].toLowerCase());
-      const playerB2 = ids.get(names[3].toLowerCase());
-
-      if (!playerA1 || !playerA2 || !playerB1 || !playerB2) {
-        throw new Error("Failed to resolve player IDs");
-      }
+      const data = (await response.json()) as PreparedTeamsResponse;
+      const [resolvedTeamA, resolvedTeamB] = data.teams;
 
       const params = new URLSearchParams({
-        playerA1,
-        playerA2,
-        playerB1,
-        playerB2,
+        teamAId: resolvedTeamA.id,
+        teamAName: resolvedTeamA.name,
+        playerA1: resolvedTeamA.playerIds[0],
+        playerA2: resolvedTeamA.playerIds[1],
+        teamBId: resolvedTeamB.id,
+        teamBName: resolvedTeamB.name,
+        playerB1: resolvedTeamB.playerIds[0],
+        playerB2: resolvedTeamB.playerIds[1],
       });
       router.push(`/finish?${params.toString()}`);
-    } catch {
-      setError("Could not start game. Try again.");
+    } catch (requestError) {
+      const message =
+        requestError instanceof Error ? requestError.message : "Could not start game. Try again.";
+      setError(message);
       setIsSubmitting(false);
     }
   };
@@ -92,40 +113,64 @@ export function GameForm({ players }: GameFormProps) {
       <div className="space-y-3">
         <h2 className="text-lg font-semibold text-slate-100 sm:text-xl">Team A</h2>
         <div className="grid gap-4">
-          <PlayerSelect
-            id="teamA1"
-            label="Player A1"
-            players={sortedPlayers}
-            value={teamA1}
-            onChange={setTeamA1}
-          />
-          <PlayerSelect
-            id="teamA2"
-            label="Player A2"
-            players={sortedPlayers}
-            value={teamA2}
-            onChange={setTeamA2}
-          />
+          <TeamSelect id="teamAName" label="Team Name" teams={teams} value={teamAName} onChange={setTeamAName} />
+          {selectedTeamA ? (
+            <div className="rounded-xl border border-white/10 bg-black/10 p-3 text-sm text-slate-300">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Players</p>
+              <p className="mt-1 font-medium text-slate-100">
+                {selectedTeamA.playerNames[0]} + {selectedTeamA.playerNames[1]}
+              </p>
+            </div>
+          ) : (
+            <>
+              <PlayerSelect
+                id="teamA1"
+                label="Player A1"
+                players={sortedPlayers}
+                value={teamA1}
+                onChange={setTeamA1}
+              />
+              <PlayerSelect
+                id="teamA2"
+                label="Player A2"
+                players={sortedPlayers}
+                value={teamA2}
+                onChange={setTeamA2}
+              />
+            </>
+          )}
         </div>
       </div>
 
       <div className="space-y-3">
         <h2 className="text-lg font-semibold text-slate-100 sm:text-xl">Team B</h2>
         <div className="grid gap-4">
-          <PlayerSelect
-            id="teamB1"
-            label="Player B1"
-            players={sortedPlayers}
-            value={teamB1}
-            onChange={setTeamB1}
-          />
-          <PlayerSelect
-            id="teamB2"
-            label="Player B2"
-            players={sortedPlayers}
-            value={teamB2}
-            onChange={setTeamB2}
-          />
+          <TeamSelect id="teamBName" label="Team Name" teams={teams} value={teamBName} onChange={setTeamBName} />
+          {selectedTeamB ? (
+            <div className="rounded-xl border border-white/10 bg-black/10 p-3 text-sm text-slate-300">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Players</p>
+              <p className="mt-1 font-medium text-slate-100">
+                {selectedTeamB.playerNames[0]} + {selectedTeamB.playerNames[1]}
+              </p>
+            </div>
+          ) : (
+            <>
+              <PlayerSelect
+                id="teamB1"
+                label="Player B1"
+                players={sortedPlayers}
+                value={teamB1}
+                onChange={setTeamB1}
+              />
+              <PlayerSelect
+                id="teamB2"
+                label="Player B2"
+                players={sortedPlayers}
+                value={teamB2}
+                onChange={setTeamB2}
+              />
+            </>
+          )}
         </div>
       </div>
 

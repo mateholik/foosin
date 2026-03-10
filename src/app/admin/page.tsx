@@ -11,6 +11,8 @@ type AdminGameRow = {
   id: string;
   teamA: string;
   teamB: string;
+  teamAPlayers: string;
+  teamBPlayers: string;
   scoreA: number;
   scoreB: number;
   createdAt: string;
@@ -38,10 +40,12 @@ async function getAdminGames(): Promise<AdminGameRow[]> {
 
   return games.map((game) => ({
     id: game.id,
-    teamA: `${namesById.get(game.player_a1) ?? "Unknown"} + ${
+    teamA: game.team_a_name,
+    teamB: game.team_b_name,
+    teamAPlayers: `${namesById.get(game.player_a1) ?? "Unknown"} + ${
       namesById.get(game.player_a2) ?? "Unknown"
     }`,
-    teamB: `${namesById.get(game.player_b1) ?? "Unknown"} + ${
+    teamBPlayers: `${namesById.get(game.player_b1) ?? "Unknown"} + ${
       namesById.get(game.player_b2) ?? "Unknown"
     }`,
     scoreA: game.score_a,

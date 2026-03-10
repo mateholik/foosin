@@ -13,14 +13,17 @@ export type LeaderboardRow = {
 export type RecentGameRow = {
   id: string;
   teamA: string;
+  teamAPlayers: string;
   teamB: string;
+  teamBPlayers: string;
   scoreA: number;
   scoreB: number;
   createdAt: string;
 };
 
 export type TeammateRow = {
-  pairKey: string;
+  teamId: string;
+  teamName: string;
   team: string;
   wins: number;
   losses: number;
@@ -136,8 +139,14 @@ export function computeRecentGames(players: Player[], games: Game[]): RecentGame
     .slice(0, 10)
     .map((game) => ({
       id: game.id,
-      teamA: [names.get(game.player_a1), names.get(game.player_a2)].filter(Boolean).join(" + "),
-      teamB: [names.get(game.player_b1), names.get(game.player_b2)].filter(Boolean).join(" + "),
+      teamA: game.team_a_name,
+      teamAPlayers: `${names.get(game.player_a1) ?? "Unknown"} + ${
+        names.get(game.player_a2) ?? "Unknown"
+      }`,
+      teamB: game.team_b_name,
+      teamBPlayers: `${names.get(game.player_b1) ?? "Unknown"} + ${
+        names.get(game.player_b2) ?? "Unknown"
+      }`,
       scoreA: game.score_a,
       scoreB: game.score_b,
       createdAt: game.created_at,
@@ -146,29 +155,34 @@ export function computeRecentGames(players: Player[], games: Game[]): RecentGame
 
 export function computeBestTeammates(players: Player[], games: Game[]): TeammateRow[] {
   const names = new Map(players.map((player) => [player.id, player.name]));
-  const pairs = new Map<
+  const teams = new Map<
     string,
     {
-      playerOne: string;
-      playerTwo: string;
+      teamName: string;
+      playersLabel: string;
       wins: number;
       losses: number;
     }
   >();
 
-  const registerPair = (firstId: string, secondId: string, won: boolean) => {
-    const [playerOne, playerTwo] = [firstId, secondId].sort();
-    const key = `${playerOne}:${playerTwo}`;
-    const existing = pairs.get(key);
+  const registerTeam = (
+    teamId: string,
+    teamName: string,
+    firstId: string,
+    secondId: string,
+    won: boolean
+  ) => {
+    const playersLabel = `${names.get(firstId) ?? "Unknown"} + ${names.get(secondId) ?? "Unknown"}`;
+    const existing = teams.get(teamId);
     if (existing) {
       if (won) existing.wins += 1;
       else existing.losses += 1;
       return;
     }
 
-    pairs.set(key, {
-      playerOne,
-      playerTwo,
+    teams.set(teamId, {
+      teamName,
+      playersLabel,
       wins: won ? 1 : 0,
       losses: won ? 0 : 1,
     });
@@ -176,22 +190,21 @@ export function computeBestTeammates(players: Player[], games: Game[]): Teammate
 
   for (const game of games) {
     const teamAWon = game.score_a > game.score_b;
-    registerPair(game.player_a1, game.player_a2, teamAWon);
-    registerPair(game.player_b1, game.player_b2, !teamAWon);
+    registerTeam(game.team_a_id, game.team_a_name, game.player_a1, game.player_a2, teamAWon);
+    registerTeam(game.team_b_id, game.team_b_name, game.player_b1, game.player_b2, !teamAWon);
   }
 
-  return Array.from(pairs.entries())
-    .map(([pairKey, pair]) => {
-      const gamesPlayed = pair.wins + pair.losses;
+  return Array.from(teams.entries())
+    .map(([teamId, teamRow]) => {
+      const gamesPlayed = teamRow.wins + teamRow.losses;
       return {
-        pairKey,
-        team: `${names.get(pair.playerOne) ?? "Unknown"} + ${
-          names.get(pair.playerTwo) ?? "Unknown"
-        }`,
-        wins: pair.wins,
-        losses: pair.losses,
+        teamId,
+        teamName: teamRow.teamName,
+        team: teamRow.playersLabel,
+        wins: teamRow.wins,
+        losses: teamRow.losses,
         gamesPlayed,
-        winRate: gamesPlayed === 0 ? 0 : pair.wins / gamesPlayed,
+        winRate: gamesPlayed === 0 ? 0 : teamRow.wins / gamesPlayed,
       };
     })
     .sort((first, second) => {

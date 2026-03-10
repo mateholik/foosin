@@ -7,6 +7,8 @@ type AdminGameRow = {
   id: string;
   teamA: string;
   teamB: string;
+  teamAPlayers: string;
+  teamBPlayers: string;
   scoreA: number;
   scoreB: number;
   createdAt: string;
@@ -36,6 +38,8 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
     setBusyGameId(gameId);
 
     const formData = new FormData(event.currentTarget);
+    const teamAName = String(formData.get("teamAName") ?? "").trim();
+    const teamBName = String(formData.get("teamBName") ?? "").trim();
     const scoreA = Number(formData.get("scoreA"));
     const scoreB = Number(formData.get("scoreB"));
 
@@ -43,7 +47,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
       const response = await fetch(`/api/admin/games/${gameId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scoreA, scoreB }),
+        body: JSON.stringify({ teamAName, teamBName, scoreA, scoreB }),
       });
       if (!response.ok) {
         const payload = (await response.json()) as { error?: string };
@@ -114,16 +118,42 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
             <form
               key={game.id}
               onSubmit={(event) => onSave(event, game.id)}
-              className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.4fr_1fr_1fr_auto_auto]"
+              className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto_auto]"
             >
               <div>
                 <p className="text-sm font-semibold text-slate-100">{game.teamA}</p>
-                <p className="text-xs text-slate-400">vs {game.teamB}</p>
+                <p className="text-xs text-slate-400">{game.teamAPlayers}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-100">vs {game.teamB}</p>
+                <p className="text-xs text-slate-400">{game.teamBPlayers}</p>
                 <p className="mt-1 text-xs uppercase tracking-wide text-slate-400">
                   {formatDate(game.createdAt)}
                 </p>
               </div>
-              <label className="space-y-1">
+              <label className="block space-y-2">
+                <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">
+                  Team A Name
+                </span>
+                <input
+                  type="text"
+                  name="teamAName"
+                  defaultValue={game.teamA}
+                  className="brut-input"
+                  required
+                />
+              </label>
+              <label className="block space-y-2">
+                <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">
+                  Team B Name
+                </span>
+                <input
+                  type="text"
+                  name="teamBName"
+                  defaultValue={game.teamB}
+                  className="brut-input"
+                  required
+                />
+              </label>
+              <label className="block space-y-2">
                 <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                   Score A
                 </span>
@@ -136,7 +166,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
                   required
                 />
               </label>
-              <label className="space-y-1">
+              <label className="block space-y-2">
                 <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                   Score B
                 </span>

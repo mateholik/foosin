@@ -26,18 +26,36 @@ export function RecentGames({ games }: RecentGamesProps) {
               <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
                 {formatDate(game.createdAt)}
               </p>
-              <p className="mt-2 flex items-center justify-between gap-3 text-sm font-semibold text-slate-100 sm:text-base">
-                <span className="truncate">{game.teamA}</span>
-                <span className="rounded-md border border-white/15 bg-black/20 px-2.5 py-1 text-sm font-bold text-slate-100">
+              <div className="mt-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-100 sm:text-base">{game.teamA}</p>
+                  <p className="mt-1 truncate text-xs text-slate-400 sm:text-sm">{game.teamAPlayers}</p>
+                </div>
+                <span
+                  className={`rounded-md px-2.5 py-1 text-sm font-bold ${
+                    game.scoreA > game.scoreB
+                      ? "border border-emerald-400/30 bg-emerald-400/15 text-emerald-200"
+                      : "border border-rose-400/30 bg-rose-400/15 text-rose-200"
+                  }`}
+                >
                   {game.scoreA}
                 </span>
-              </p>
-              <p className="mt-2 flex items-center justify-between gap-3 text-sm font-semibold text-slate-100 sm:text-base">
-                <span className="truncate">{game.teamB}</span>
-                <span className="rounded-md border border-white/15 bg-black/20 px-2.5 py-1 text-sm font-bold text-slate-100">
+              </div>
+              <div className="mt-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-100 sm:text-base">{game.teamB}</p>
+                  <p className="mt-1 truncate text-xs text-slate-400 sm:text-sm">{game.teamBPlayers}</p>
+                </div>
+                <span
+                  className={`rounded-md px-2.5 py-1 text-sm font-bold ${
+                    game.scoreB > game.scoreA
+                      ? "border border-emerald-400/30 bg-emerald-400/15 text-emerald-200"
+                      : "border border-rose-400/30 bg-rose-400/15 text-rose-200"
+                  }`}
+                >
                   {game.scoreB}
                 </span>
-              </p>
+              </div>
             </li>
           ))}
         </ul>

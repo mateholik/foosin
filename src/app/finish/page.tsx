@@ -3,8 +3,12 @@ import { ScoreForm } from "@/components/ScoreForm";
 import { assertSupabaseEnv, supabase } from "@/lib/supabase";
 
 type SearchParams = {
+  teamAId?: string;
+  teamAName?: string;
   playerA1?: string;
   playerA2?: string;
+  teamBId?: string;
+  teamBName?: string;
   playerB1?: string;
   playerB2?: string;
 };
@@ -24,22 +28,26 @@ export default async function FinishPage({
   searchParams: Promise<SearchParams>;
 }) {
   const resolvedSearchParams = await searchParams;
+  const teamAId = resolvedSearchParams.teamAId;
+  const teamAName = resolvedSearchParams.teamAName;
   const playerA1 = resolvedSearchParams.playerA1;
   const playerA2 = resolvedSearchParams.playerA2;
+  const teamBId = resolvedSearchParams.teamBId;
+  const teamBName = resolvedSearchParams.teamBName;
   const playerB1 = resolvedSearchParams.playerB1;
   const playerB2 = resolvedSearchParams.playerB2;
 
-  const ids = [playerA1, playerA2, playerB1, playerB2];
+  const ids = [teamAId, playerA1, playerA2, teamBId, playerB1, playerB2, teamAName, teamBName];
   if (ids.some((id) => !id)) {
     notFound();
   }
 
-  const players = await getPlayersByIds(ids as string[]);
+  const players = await getPlayersByIds([playerA1!, playerA2!, playerB1!, playerB2!]);
   const namesById = new Map(players.map((player) => [player.id, player.name]));
 
-  const teamALabel = `${namesById.get(playerA1!)} + ${namesById.get(playerA2!)}`;
-  const teamBLabel = `${namesById.get(playerB1!)} + ${namesById.get(playerB2!)}`;
-  if (teamALabel.includes("undefined") || teamBLabel.includes("undefined")) {
+  const teamAPlayersLabel = `${namesById.get(playerA1!)} + ${namesById.get(playerA2!)}`;
+  const teamBPlayersLabel = `${namesById.get(playerB1!)} + ${namesById.get(playerB2!)}`;
+  if (teamAPlayersLabel.includes("undefined") || teamBPlayersLabel.includes("undefined")) {
     notFound();
   }
 
@@ -49,12 +57,16 @@ export default async function FinishPage({
         <h1 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">Finish Game</h1>
       </header>
       <ScoreForm
+        teamAId={teamAId!}
         playerA1={playerA1!}
         playerA2={playerA2!}
+        teamAName={teamAName!}
+        teamAPlayersLabel={teamAPlayersLabel}
+        teamBId={teamBId!}
         playerB1={playerB1!}
         playerB2={playerB2!}
-        teamALabel={teamALabel}
-        teamBLabel={teamBLabel}
+        teamBName={teamBName!}
+        teamBPlayersLabel={teamBPlayersLabel}
       />
     </main>
   );
