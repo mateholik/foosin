@@ -2,6 +2,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 :root {
@@ -73,7 +74,7 @@ h6 {
   }
 
   .brut-input {
-    @apply w-full rounded-xl border border-white/20 bg-[#111524] px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-400;
+    @apply w-full rounded-xl border border-white/20 bg-[#111524] px-3 py-2.5 text-base text-slate-100 outline-none transition placeholder:text-slate-400 sm:text-sm;
   }
 
   .brut-input:focus {
@@ -82,5 +83,13 @@ h6 {
 
   .brut-link {
     @apply text-sm font-medium text-[rgb(var(--accent-rgb))] transition hover:text-white;
+  }
+}
+
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
   }
 }
