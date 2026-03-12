@@ -25,6 +25,7 @@ export type TeammateRow = {
   teamId: string;
   teamName: string;
   team: string;
+  rating: number;
   wins: number;
   losses: number;
   gamesPlayed: number;
@@ -154,12 +155,15 @@ export function computeRecentGames(players: Player[], games: Game[]): RecentGame
 }
 
 export function computeBestTeammates(players: Player[], games: Game[]): TeammateRow[] {
+  const BASE_ELO = 1000;
+  const K_FACTOR = 24;
   const names = new Map(players.map((player) => [player.id, player.name]));
   const teams = new Map<
     string,
     {
       teamName: string;
       playersLabel: string;
+      rating: number;
       wins: number;
       losses: number;
     }
@@ -183,15 +187,36 @@ export function computeBestTeammates(players: Player[], games: Game[]): Teammate
     teams.set(teamId, {
       teamName,
       playersLabel,
+      rating: BASE_ELO,
       wins: won ? 1 : 0,
       losses: won ? 0 : 1,
     });
   };
 
-  for (const game of games) {
+  const gamesByTime = [...games].sort(
+    (first, second) =>
+      new Date(first.created_at).getTime() - new Date(second.created_at).getTime()
+  );
+
+  for (const game of gamesByTime) {
     const teamAWon = game.score_a > game.score_b;
     registerTeam(game.team_a_id, game.team_a_name, game.player_a1, game.player_a2, teamAWon);
     registerTeam(game.team_b_id, game.team_b_name, game.player_b1, game.player_b2, !teamAWon);
+
+    const teamA = teams.get(game.team_a_id);
+    const teamB = teams.get(game.team_b_id);
+    if (!teamA || !teamB) continue;
+
+    const teamAScore = game.score_a > game.score_b ? 1 : game.score_a < game.score_b ? 0 : 0.5;
+    const teamBScore = 1 - teamAScore;
+    const expectedTeamAScore = 1 / (1 + 10 ** ((teamB.rating - teamA.rating) / 400));
+    const expectedTeamBScore = 1 - expectedTeamAScore;
+
+    const teamADelta = K_FACTOR * (teamAScore - expectedTeamAScore);
+    const teamBDelta = K_FACTOR * (teamBScore - expectedTeamBScore);
+
+    teamA.rating += teamADelta;
+    teamB.rating += teamBDelta;
   }
 
   return Array.from(teams.entries())
@@ -201,6 +226,7 @@ export function computeBestTeammates(players: Player[], games: Game[]): Teammate
         teamId,
         teamName: teamRow.teamName,
         team: teamRow.playersLabel,
+        rating: Math.round(teamRow.rating),
         wins: teamRow.wins,
         losses: teamRow.losses,
         gamesPlayed,
@@ -208,6 +234,7 @@ export function computeBestTeammates(players: Player[], games: Game[]): Teammate
       };
     })
     .sort((first, second) => {
+      if (second.rating !== first.rating) return second.rating - first.rating;
       if (second.winRate !== first.winRate) return second.winRate - first.winRate;
       if (second.gamesPlayed !== first.gamesPlayed) {
         return second.gamesPlayed - first.gamesPlayed;

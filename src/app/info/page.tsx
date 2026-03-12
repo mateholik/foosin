@@ -30,7 +30,7 @@ export default function InfoPage() {
 
       <section className="brut-panel space-y-3">
         <h2 className="text-xl font-semibold tracking-tight text-slate-100 sm:text-2xl">
-          Elo (Simple)
+          Elo
         </h2>
         <ul className="space-y-2 text-sm leading-6 text-slate-300">
           <li>
@@ -80,6 +80,38 @@ export default function InfoPage() {
 
       <section className="brut-panel space-y-3">
         <h2 className="text-xl font-semibold tracking-tight text-slate-100 sm:text-2xl">
+          Team Elo
+        </h2>
+        <ul className="space-y-2 text-sm leading-6 text-slate-300">
+          <li>
+            <strong>1) Every team starts at 1000</strong>
+          </li>
+          <li>
+            <strong>2) Games are processed oldest to newest</strong>
+          </li>
+          <li>
+            <strong>3) Expected score formula (same as player Elo)</strong>
+            <br />
+            <strong>ExpectedA = 1 / (1 + 10^((TeamB - TeamA)/400))</strong>
+          </li>
+          <li>
+            <strong>4) K-factor = 24</strong>
+          </li>
+          <li>
+            <strong>5) Update after each match</strong>
+            <br />
+            Winner gains points, loser loses points.
+            <br />
+            Beat stronger team = bigger gain; lose to weaker team = bigger loss.
+          </li>
+          <li>
+            <strong>6) Best Teams is sorted by team Elo</strong>
+          </li>
+        </ul>
+      </section>
+
+      <section className="brut-panel space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight text-slate-100 sm:text-2xl">
           Other Sections
         </h2>
         <ul className="space-y-2 text-sm leading-6 text-slate-300">
@@ -87,8 +119,7 @@ export default function InfoPage() {
             <strong>Recent Games:</strong> Latest 10 matches, newest first.
           </li>
           <li>
-            <strong>Best Teammates:</strong> Pair records grouped by two-player combination, sorted by
-            best win rate and more games.
+            <strong>Best Teams:</strong> Team records with team Elo, sorted by highest Elo.
           </li>
         </ul>
       </section>
