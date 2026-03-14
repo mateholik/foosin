@@ -12,6 +12,7 @@ Simple self-hosted foosball score tracker for 2v2 matches.
 - Best teammate ranking (included as a bonus section)
 - `/admin` shared-password access for editing/deleting games
 - `/admin` player management (rename, delete if unused)
+- `/admin` team management (rename team, syncs game snapshots)
 
 ## Stack
 

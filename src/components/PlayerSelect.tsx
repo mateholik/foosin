@@ -45,7 +45,6 @@ export function PlayerSelect({ id, label, players, value, onChange }: PlayerSele
           aria-label={label}
           value={safeValue}
           onChange={(event) => onChange(event.target.value ?? "")}
-          placeholder="Search or type a player"
           className="brut-input"
           autoComplete="off"
         />

@@ -7,6 +7,7 @@ type AdminPlayerRow = {
   id: string;
   name: string;
   gamesCount: number;
+  teamsCount: number;
 };
 
 type AdminPlayersTableProps = {
@@ -92,7 +93,8 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
                 <div>
                   <p className="text-sm font-semibold text-slate-100">{player.name}</p>
                   <p className="text-xs text-slate-400">
-                    {player.gamesCount} game{player.gamesCount === 1 ? "" : "s"}
+                    {player.gamesCount} game{player.gamesCount === 1 ? "" : "s"} • {player.teamsCount} team
+                    {player.teamsCount === 1 ? "" : "s"}
                   </p>
                 </div>
                 <label className="space-y-1">
@@ -110,7 +112,7 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
                 <button
                   type="submit"
                   disabled={isBusy}
-                  className="brut-btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                  className="brut-btn-primary h-11 min-w-24 self-end disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Save
                 </button>
@@ -118,7 +120,7 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
                   type="button"
                   disabled={isBusy || isUsed}
                   onClick={() => onDelete(player.id)}
-                  className="brut-btn-danger disabled:cursor-not-allowed disabled:opacity-60"
+                  className="brut-btn-danger h-11 min-w-24 self-end disabled:cursor-not-allowed disabled:opacity-60"
                   title={isUsed ? "Cannot delete player with existing games." : "Delete player"}
                 >
                   Delete

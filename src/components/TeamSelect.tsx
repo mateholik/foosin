@@ -41,7 +41,6 @@ export function TeamSelect({ id, label, teams, value, onChange }: TeamSelectProp
           aria-label={label}
           value={safeValue}
           onChange={(event) => onChange(event.target.value ?? "")}
-          placeholder="Search or type a team"
           className="brut-input"
           autoComplete="off"
         />

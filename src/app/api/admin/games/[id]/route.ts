@@ -3,15 +3,9 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { assertSupabaseEnv, supabase } from "@/lib/supabase";
 
 type UpdateGameRequestBody = {
-  teamAName?: string;
-  teamBName?: string;
   scoreA?: number;
   scoreB?: number;
 };
-
-function normalizeName(value?: string) {
-  return value?.trim() ?? "";
-}
 
 export async function PATCH(
   request: Request,
@@ -23,8 +17,6 @@ export async function PATCH(
 
   assertSupabaseEnv();
   const payload = (await request.json()) as UpdateGameRequestBody;
-  const teamAName = normalizeName(payload.teamAName);
-  const teamBName = normalizeName(payload.teamBName);
   const scoreA = payload.scoreA;
   const scoreB = payload.scoreB;
   const invalidScore =
@@ -36,18 +28,14 @@ export async function PATCH(
     scoreB < 0 ||
     scoreA === scoreB;
 
-  if (invalidScore || !teamAName || !teamBName) {
-    return NextResponse.json({ error: "Invalid game update." }, { status: 400 });
-  }
-
-  if (teamAName.toLowerCase() === teamBName.toLowerCase()) {
-    return NextResponse.json({ error: "Team names must be different." }, { status: 400 });
+  if (invalidScore) {
+    return NextResponse.json({ error: "Invalid score update." }, { status: 400 });
   }
 
   const { id } = await params;
   const { error } = await supabase
     .from("games")
-    .update({ team_a_name: teamAName, team_b_name: teamBName, score_a: scoreA, score_b: scoreB })
+    .update({ score_a: scoreA, score_b: scoreB })
     .eq("id", id);
 
   if (error) {

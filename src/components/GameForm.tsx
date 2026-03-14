@@ -113,7 +113,7 @@ export function GameForm({ players, teams }: GameFormProps) {
       <div className="space-y-3">
         <h2 className="text-lg font-semibold text-slate-100 sm:text-xl">Team A</h2>
         <div className="grid gap-4">
-          <TeamSelect id="teamAName" label="Team Name" teams={teams} value={teamAName} onChange={setTeamAName} />
+          <TeamSelect id="teamAName" label="team (add or choose)" teams={teams} value={teamAName} onChange={setTeamAName} />
           {selectedTeamA ? (
             <div className="rounded-xl border border-white/10 bg-black/10 p-3 text-sm text-slate-300">
               <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Players</p>
@@ -125,14 +125,14 @@ export function GameForm({ players, teams }: GameFormProps) {
             <>
               <PlayerSelect
                 id="teamA1"
-                label="Player A1"
+                label="Player A1 (Add or choose)"
                 players={sortedPlayers}
                 value={teamA1}
                 onChange={setTeamA1}
               />
               <PlayerSelect
                 id="teamA2"
-                label="Player A2"
+                label="Player A2 (Add or choose)"
                 players={sortedPlayers}
                 value={teamA2}
                 onChange={setTeamA2}
@@ -145,7 +145,7 @@ export function GameForm({ players, teams }: GameFormProps) {
       <div className="space-y-3">
         <h2 className="text-lg font-semibold text-slate-100 sm:text-xl">Team B</h2>
         <div className="grid gap-4">
-          <TeamSelect id="teamBName" label="Team Name" teams={teams} value={teamBName} onChange={setTeamBName} />
+          <TeamSelect id="teamBName" label="team (add or choose)" teams={teams} value={teamBName} onChange={setTeamBName} />
           {selectedTeamB ? (
             <div className="rounded-xl border border-white/10 bg-black/10 p-3 text-sm text-slate-300">
               <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Players</p>
@@ -157,14 +157,14 @@ export function GameForm({ players, teams }: GameFormProps) {
             <>
               <PlayerSelect
                 id="teamB1"
-                label="Player B1"
+                label="Player B1 (Add or choose)"
                 players={sortedPlayers}
                 value={teamB1}
                 onChange={setTeamB1}
               />
               <PlayerSelect
                 id="teamB2"
-                label="Player B2"
+                label="Player B2 (Add or choose)"
                 players={sortedPlayers}
                 value={teamB2}
                 onChange={setTeamB2}

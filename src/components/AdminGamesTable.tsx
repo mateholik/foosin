@@ -38,8 +38,6 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
     setBusyGameId(gameId);
 
     const formData = new FormData(event.currentTarget);
-    const teamAName = String(formData.get("teamAName") ?? "").trim();
-    const teamBName = String(formData.get("teamBName") ?? "").trim();
     const scoreA = Number(formData.get("scoreA"));
     const scoreB = Number(formData.get("scoreB"));
 
@@ -47,7 +45,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
       const response = await fetch(`/api/admin/games/${gameId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teamAName, teamBName, scoreA, scoreB }),
+        body: JSON.stringify({ scoreA, scoreB }),
       });
       if (!response.ok) {
         const payload = (await response.json()) as { error?: string };
@@ -83,31 +81,9 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
     }
   };
 
-  const onLogout = async () => {
-    setError("");
-    setBusyGameId("logout");
-    try {
-      await fetch("/api/admin/logout", { method: "POST" });
-      router.refresh();
-    } catch {
-      setError("Logout failed.");
-      setBusyGameId(null);
-    }
-  };
-
   return (
     <section className="brut-panel space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Manage Games</h2>
-        <button
-          type="button"
-          onClick={onLogout}
-          disabled={busyGameId === "logout"}
-          className="brut-btn-neutral disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          Logout
-        </button>
-      </div>
+      <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Manage Games</h2>
       {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       {games.length === 0 ? (
@@ -118,7 +94,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
             <form
               key={game.id}
               onSubmit={(event) => onSave(event, game.id)}
-              className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto_auto]"
+              className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.5fr_1fr_1fr_auto_auto]"
             >
               <div>
                 <p className="text-sm font-semibold text-slate-100">{game.teamA}</p>
@@ -129,30 +105,6 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
                   {formatDate(game.createdAt)}
                 </p>
               </div>
-              <label className="block space-y-2">
-                <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Team A Name
-                </span>
-                <input
-                  type="text"
-                  name="teamAName"
-                  defaultValue={game.teamA}
-                  className="brut-input"
-                  required
-                />
-              </label>
-              <label className="block space-y-2">
-                <span className="block text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Team B Name
-                </span>
-                <input
-                  type="text"
-                  name="teamBName"
-                  defaultValue={game.teamB}
-                  className="brut-input"
-                  required
-                />
-              </label>
               <label className="block space-y-2">
                 <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
                   Score A
@@ -182,7 +134,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
               <button
                 type="submit"
                 disabled={busyGameId === game.id}
-                className="brut-btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                className="brut-btn-primary h-11 min-w-24 self-end disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Save
               </button>
@@ -190,7 +142,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
                 type="button"
                 onClick={() => onDelete(game.id)}
                 disabled={busyGameId === game.id}
-                className="brut-btn-danger disabled:cursor-not-allowed disabled:opacity-60"
+                className="brut-btn-danger h-11 min-w-24 self-end disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Delete
               </button>

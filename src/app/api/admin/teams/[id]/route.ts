@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { assertSupabaseEnv, supabase } from "@/lib/supabase";
+
+type UpdateTeamRequestBody = {
+  name?: string;
+};
+
+function normalizeTeamName(value: string | undefined) {
+  return (value ?? "").trim();
+}
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  assertSupabaseEnv();
+  const payload = (await request.json()) as UpdateTeamRequestBody;
+  const nextName = normalizeTeamName(payload.name);
+  if (!nextName) {
+    return NextResponse.json({ error: "Team name is required." }, { status: 400 });
+  }
+
+  const { id } = await params;
+
+  const { error: teamError } = await supabase.from("teams").update({ name: nextName }).eq("id", id);
+  if (teamError) {
+    return NextResponse.json({ error: teamError.message }, { status: 500 });
+  }
+
+  const [teamAUpdate, teamBUpdate] = await Promise.all([
+    supabase.from("games").update({ team_a_name: nextName }).eq("team_a_id", id),
+    supabase.from("games").update({ team_b_name: nextName }).eq("team_b_id", id),
+  ]);
+
+  if (teamAUpdate.error) {
+    return NextResponse.json({ error: teamAUpdate.error.message }, { status: 500 });
+  }
+  if (teamBUpdate.error) {
+    return NextResponse.json({ error: teamBUpdate.error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type NavItem = {
@@ -38,6 +39,16 @@ function FoosballShape() {
 export function HomeStickyHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const router = useRouter();
+  const showAdminLogout = pathname.startsWith("/admin");
+
+  const onLogout = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    setIsOpen(false);
+    router.push("/admin");
+    router.refresh();
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -98,6 +109,17 @@ export function HomeStickyHeader() {
                     </a>
                   </li>
                 ))}
+                {showAdminLogout ? (
+                  <li>
+                    <button
+                      type="button"
+                      onClick={onLogout}
+                      className="block w-full rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-white/10 hover:text-[rgb(var(--accent-rgb))]"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                ) : null}
               </ul>
             </nav>
           ) : null}
