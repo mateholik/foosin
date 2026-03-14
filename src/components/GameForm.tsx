@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
+import { toast } from "sonner";
 import type { Player } from "@/lib/supabase";
 import { PlayerSelect } from "@/components/PlayerSelect";
 import { TeamSelect, type TeamOption } from "@/components/TeamSelect";
@@ -32,7 +33,6 @@ export function GameForm({ players, teams }: GameFormProps) {
   const [teamB1, setTeamB1] = useState("");
   const [teamB2, setTeamB2] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   const sortedPlayers = useMemo(
     () => [...players].sort((first, second) => first.name.localeCompare(second.name)),
@@ -47,17 +47,16 @@ export function GameForm({ players, teams }: GameFormProps) {
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    setError("");
 
     const normalizedTeamAName = normalizeName(teamAName);
     const normalizedTeamBName = normalizeName(teamBName);
     if (!normalizedTeamAName || !normalizedTeamBName) {
-      setError("Both team names are required.");
+      toast.error("Both team names are required.");
       return;
     }
 
     if (normalizedTeamAName.toLowerCase() === normalizedTeamBName.toLowerCase()) {
-      setError("Team names must be different.");
+      toast.error("Team names must be different.");
       return;
     }
 
@@ -88,6 +87,7 @@ export function GameForm({ players, teams }: GameFormProps) {
 
       const data = (await response.json()) as PreparedTeamsResponse;
       const [resolvedTeamA, resolvedTeamB] = data.teams;
+      toast.success("Teams prepared.");
 
       const params = new URLSearchParams({
         teamAId: resolvedTeamA.id,
@@ -103,7 +103,7 @@ export function GameForm({ players, teams }: GameFormProps) {
     } catch (requestError) {
       const message =
         requestError instanceof Error ? requestError.message : "Could not start game. Try again.";
-      setError(message);
+      toast.error(message);
       setIsSubmitting(false);
     }
   };
@@ -173,8 +173,6 @@ export function GameForm({ players, teams }: GameFormProps) {
           )}
         </div>
       </div>
-
-      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       <button
         type="submit"

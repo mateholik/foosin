@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 type ScoreFormProps = {
   teamAId: string;
@@ -32,11 +33,9 @@ export function ScoreForm({
   const [scoreA, setScoreA] = useState("10");
   const [scoreB, setScoreB] = useState("7");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    setError("");
 
     const parsedScoreA = Number(scoreA);
     const parsedScoreB = Number(scoreB);
@@ -47,7 +46,7 @@ export function ScoreForm({
       parsedScoreB < 0 ||
       parsedScoreA === parsedScoreB;
     if (invalidScore) {
-      setError("Enter valid non-tied scores.");
+      toast.error("Enter valid non-tied scores.");
       return;
     }
 
@@ -71,10 +70,13 @@ export function ScoreForm({
       });
 
       if (!response.ok) throw new Error("Failed to save game");
+      toast.success("Game saved.");
       router.push("/");
       router.refresh();
-    } catch {
-      setError("Could not submit score. Try again.");
+    } catch (requestError) {
+      const message =
+        requestError instanceof Error ? requestError.message : "Could not submit score. Try again.";
+      toast.error(message);
       setIsSubmitting(false);
     }
   };
@@ -112,8 +114,6 @@ export function ScoreForm({
           />
         </label>
       </div>
-
-      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       <button
         type="submit"

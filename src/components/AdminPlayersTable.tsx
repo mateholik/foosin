@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type AdminPlayerRow = {
   id: string;
@@ -17,17 +18,15 @@ type AdminPlayersTableProps = {
 export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
   const router = useRouter();
   const [busyPlayerId, setBusyPlayerId] = useState<string | null>(null);
-  const [error, setError] = useState("");
 
   const onRename = async (event: FormEvent<HTMLFormElement>, playerId: string) => {
     event.preventDefault();
-    setError("");
     setBusyPlayerId(playerId);
 
     const formData = new FormData(event.currentTarget);
     const name = String(formData.get("name") ?? "").trim();
     if (!name) {
-      setError("Name is required.");
+      toast.error("Name is required.");
       setBusyPlayerId(null);
       return;
     }
@@ -42,19 +41,24 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
         const payload = (await response.json()) as { error?: string };
         throw new Error(payload.error ?? "Rename failed.");
       }
+      toast.success("Player updated.");
       router.refresh();
     } catch (requestError) {
       const message = requestError instanceof Error ? requestError.message : "Rename failed.";
-      setError(message);
+      toast.error(message);
       setBusyPlayerId(null);
     }
   };
 
-  const onDelete = async (playerId: string) => {
+  const onDelete = async (playerId: string, hasReferences: boolean) => {
+    if (hasReferences) {
+      toast.error("Cannot delete player with existing games or teams.");
+      return;
+    }
+
     const confirmed = window.confirm("Delete this player?");
     if (!confirmed) return;
 
-    setError("");
     setBusyPlayerId(playerId);
     try {
       const response = await fetch(`/api/admin/players/${playerId}`, {
@@ -64,10 +68,11 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
         const payload = (await response.json()) as { error?: string };
         throw new Error(payload.error ?? "Delete failed.");
       }
+      toast.success("Player deleted.");
       router.refresh();
     } catch (requestError) {
       const message = requestError instanceof Error ? requestError.message : "Delete failed.";
-      setError(message);
+      toast.error(message);
       setBusyPlayerId(null);
     }
   };
@@ -75,14 +80,13 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
   return (
     <section className="brut-panel space-y-4">
       <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Manage Players</h2>
-      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       {players.length === 0 ? (
         <p className="text-sm text-slate-300">No players found.</p>
       ) : (
         <div className="space-y-3">
           {players.map((player) => {
-            const isUsed = player.gamesCount > 0;
+            const hasReferences = player.gamesCount > 0 || player.teamsCount > 0;
             const isBusy = busyPlayerId === player.id;
             return (
               <form
@@ -118,10 +122,9 @@ export function AdminPlayersTable({ players }: AdminPlayersTableProps) {
                 </button>
                 <button
                   type="button"
-                  disabled={isBusy || isUsed}
-                  onClick={() => onDelete(player.id)}
+                  disabled={isBusy}
+                  onClick={() => onDelete(player.id, hasReferences)}
                   className="brut-btn-danger h-11 min-w-24 self-end disabled:cursor-not-allowed disabled:opacity-60"
-                  title={isUsed ? "Cannot delete player with existing games." : "Delete player"}
                 >
                   Delete
                 </button>

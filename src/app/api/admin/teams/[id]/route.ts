@@ -46,3 +46,38 @@ export async function PATCH(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  assertSupabaseEnv();
+  const { id } = await params;
+
+  const { count, error: countError } = await supabase
+    .from("games")
+    .select("*", { count: "exact", head: true })
+    .or(`team_a_id.eq.${id},team_b_id.eq.${id}`);
+
+  if (countError) {
+    return NextResponse.json({ error: countError.message }, { status: 500 });
+  }
+
+  if ((count ?? 0) > 0) {
+    return NextResponse.json(
+      { error: "Cannot delete team with existing games." },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabase.from("teams").delete().eq("id", id);
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}

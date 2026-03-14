@@ -2,16 +2,15 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function AdminLoginForm() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     try {
@@ -26,11 +25,12 @@ export function AdminLoginForm() {
         throw new Error(payload.error ?? "Login failed.");
       }
 
+      toast.success("Signed in.");
       router.refresh();
     } catch (submissionError) {
       const message =
         submissionError instanceof Error ? submissionError.message : "Login failed.";
-      setError(message);
+      toast.error(message);
       setIsSubmitting(false);
     }
   };
@@ -48,7 +48,6 @@ export function AdminLoginForm() {
           required
         />
       </label>
-      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
       <button
         type="submit"
         disabled={isSubmitting}

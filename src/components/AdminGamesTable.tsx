@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type AdminGameRow = {
   id: string;
@@ -30,11 +31,9 @@ function formatDate(value: string) {
 export function AdminGamesTable({ games }: AdminGamesTableProps) {
   const router = useRouter();
   const [busyGameId, setBusyGameId] = useState<string | null>(null);
-  const [error, setError] = useState("");
 
   const onSave = async (event: FormEvent<HTMLFormElement>, gameId: string) => {
     event.preventDefault();
-    setError("");
     setBusyGameId(gameId);
 
     const formData = new FormData(event.currentTarget);
@@ -51,10 +50,11 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
         const payload = (await response.json()) as { error?: string };
         throw new Error(payload.error ?? "Update failed.");
       }
+      toast.success("Game updated.");
       router.refresh();
     } catch (requestError) {
       const message = requestError instanceof Error ? requestError.message : "Update failed.";
-      setError(message);
+      toast.error(message);
       setBusyGameId(null);
     }
   };
@@ -63,7 +63,6 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
     const confirmed = window.confirm("Delete this game?");
     if (!confirmed) return;
 
-    setError("");
     setBusyGameId(gameId);
     try {
       const response = await fetch(`/api/admin/games/${gameId}`, {
@@ -73,10 +72,11 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
         const payload = (await response.json()) as { error?: string };
         throw new Error(payload.error ?? "Delete failed.");
       }
+      toast.success("Game deleted.");
       router.refresh();
     } catch (requestError) {
       const message = requestError instanceof Error ? requestError.message : "Delete failed.";
-      setError(message);
+      toast.error(message);
       setBusyGameId(null);
     }
   };
@@ -84,7 +84,6 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
   return (
     <section className="brut-panel space-y-4">
       <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Manage Games</h2>
-      {error ? <p className="text-sm font-medium text-rose-300">{error}</p> : null}
 
       {games.length === 0 ? (
         <p className="text-sm text-slate-300">No games found.</p>

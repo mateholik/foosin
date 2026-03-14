@@ -61,6 +61,22 @@ export async function DELETE(
     );
   }
 
+  const { count: teamsCount, error: teamsCountError } = await supabase
+    .from("teams")
+    .select("*", { count: "exact", head: true })
+    .or(`player_1_id.eq.${id},player_2_id.eq.${id}`);
+
+  if (teamsCountError) {
+    return NextResponse.json({ error: teamsCountError.message }, { status: 500 });
+  }
+
+  if ((teamsCount ?? 0) > 0) {
+    return NextResponse.json(
+      { error: "Cannot delete player while they are part of existing teams." },
+      { status: 400 }
+    );
+  }
+
   const { error: deleteError } = await supabase.from("players").delete().eq("id", id);
   if (deleteError) {
     return NextResponse.json({ error: deleteError.message }, { status: 500 });

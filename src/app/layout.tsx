@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import type { Metadata } from "next";
+import { AppToaster } from "@/components/AppToaster";
 import { HomeStickyHeader } from "@/components/HomeStickyHeader";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       </head>
       <body className="pt-16 sm:pt-20">
         <HomeStickyHeader />
+        <AppToaster />
         {children}
       </body>
     </html>
