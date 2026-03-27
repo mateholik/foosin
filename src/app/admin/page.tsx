@@ -165,9 +165,11 @@ export default async function AdminPage() {
 
       {isAdmin ? (
         <>
-          <AdminTeamsTable teams={teams} />
-          <AdminPlayersTable players={players} />
           <AdminGamesTable games={games} />
+          <AdminPlayersTable players={players} />
+          <AdminTeamsTable teams={teams} />
+         
+   
         </>
       ) : (
         <AdminLoginForm />
