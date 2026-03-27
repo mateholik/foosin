@@ -4,8 +4,16 @@ type RecentGamesProps = {
   games: RecentGameRow[];
 };
 
+function parseSupabaseTimestamp(value: string) {
+  // Supabase can return `timestamp` (no timezone) as `YYYY-MM-DDTHH:mm:ss`.
+  // Treat it as UTC to avoid client-local timezone skew.
+  const hasTimeZone =
+    value.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(value) || /[+-]\d{2}$/.test(value);
+  return new Date(hasTimeZone ? value : `${value}Z`);
+}
+
 function formatDate(value: string) {
-  const date = new Date(value);
+  const date = parseSupabaseTimestamp(value);
   const now = new Date();
   const diffSeconds = Math.round((date.getTime() - now.getTime()) / 1000);
   const absSeconds = Math.abs(diffSeconds);
