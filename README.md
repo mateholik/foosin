@@ -126,3 +126,6 @@ Copy standalone build files to DO server. .next folder should exist in www/foosi
 scp -r .next/standalone root@161.35.22.48:/var/www/foosin/.next/
 scp -r .next/static root@161.35.22.48:/var/www/foosin/.next/
 scp -r public root@161.35.22.48:/var/www/foosin/
+
+
+in server run build and restart pm2. scp doesnt work for now
