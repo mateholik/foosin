@@ -1,18 +1,19 @@
 import { GameForm } from "@/components/GameForm";
-import { assertSupabaseEnv, supabase, type Player, type Team } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { type Player, type Team } from "@/lib/supabase";
 import type { TeamOption } from "@/components/TeamSelect";
 
 export const dynamic = "force-dynamic";
 
 async function getPlayers() {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const { data, error } = await supabase.from("players").select("id,name").order("name");
   if (error) throw new Error(error.message);
   return (data ?? []) as Pick<Player, "id" | "name">[];
 }
 
 async function getTeams() {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const { data, error } = await supabase.from("teams").select("id,name,player_1_id,player_2_id");
   if (error) throw new Error(error.message);
   return (data ?? []) as Team[];

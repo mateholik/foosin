@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { ScoreForm } from "@/components/ScoreForm";
-import { assertSupabaseEnv, supabase } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 type SearchParams = {
   teamAId?: string;
@@ -16,7 +16,7 @@ type SearchParams = {
 export const dynamic = "force-dynamic";
 
 async function getPlayersByIds(ids: string[]) {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const { data, error } = await supabase.from("players").select("id,name").in("id", ids);
   if (error) throw new Error(error.message);
   return data ?? [];

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { assertSupabaseEnv, supabase, type Team } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { type Team } from "@/lib/supabase";
 
 type InputTeam = {
   name?: string;
@@ -29,7 +30,7 @@ function pairKey(firstId: string, secondId: string) {
 }
 
 export async function POST(request: Request) {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const payload = (await request.json()) as PrepareTeamsRequestBody;
   const teamsInput = payload.teams ?? [];
 

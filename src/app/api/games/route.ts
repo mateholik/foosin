@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { assertSupabaseEnv, supabase } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 type GameRequestBody = {
   teamAId?: string;
@@ -19,7 +19,7 @@ function normalizeName(value?: string) {
 }
 
 export async function POST(request: Request) {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const payload = (await request.json()) as GameRequestBody;
   const teamAName = normalizeName(payload.teamAName);
   const teamBName = normalizeName(payload.teamBName);

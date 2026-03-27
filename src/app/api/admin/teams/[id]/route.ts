@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { assertSupabaseEnv, supabase } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 type UpdateTeamRequestBody = {
   name?: string;
@@ -18,7 +18,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const payload = (await request.json()) as UpdateTeamRequestBody;
   const nextName = normalizeTeamName(payload.name);
   if (!nextName) {
@@ -55,7 +55,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const { id } = await params;
 
   const { count, error: countError } = await supabase

@@ -30,3 +30,8 @@ create table if not exists games (
   score_b int not null check (score_b >= 0),
   created_at timestamp default now()
 );
+
+-- Lock down exposed tables. Service role (server) bypasses RLS; public keys do not.
+alter table players enable row level security;
+alter table teams enable row level security;
+alter table games enable row level security;

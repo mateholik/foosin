@@ -1,23 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
-
-export function assertSupabaseEnv() {
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      "Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY)."
-    );
-  }
-}
-
-export const supabase = createClient(
-  supabaseUrl ?? "https://example.supabase.co",
-  supabaseAnonKey ?? "example-anon-key"
-);
-
 export type Player = {
   id: string;
   name: string;
@@ -46,3 +26,4 @@ export type Game = {
   score_b: number;
   created_at: string;
 };
+

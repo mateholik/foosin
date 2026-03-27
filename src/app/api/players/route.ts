@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { assertSupabaseEnv, supabase } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 type PlayersRequestBody = {
   names?: string[];
@@ -19,7 +19,7 @@ function normalizeNames(input: string[] = []) {
 }
 
 export async function POST(request: Request) {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const payload = (await request.json()) as PlayersRequestBody;
   const names = normalizeNames(payload.names);
 

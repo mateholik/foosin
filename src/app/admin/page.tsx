@@ -3,7 +3,8 @@ import { AdminLoginForm } from "@/components/AdminLoginForm";
 import { AdminPlayersTable } from "@/components/AdminPlayersTable";
 import { AdminTeamsTable } from "@/components/AdminTeamsTable";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { assertSupabaseEnv, type Game, type Player, type Team, supabase } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { type Game, type Player, type Team } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,7 @@ type AdminTeamRow = {
 };
 
 async function getAdminGames(): Promise<AdminGameRow[]> {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const [playersResult, gamesResult] = await Promise.all([
     supabase.from("players").select("id,name"),
     supabase.from("games").select("*").order("created_at", { ascending: false }).limit(100),
@@ -63,7 +64,7 @@ async function getAdminGames(): Promise<AdminGameRow[]> {
 }
 
 async function getAdminPlayers(): Promise<AdminPlayerRow[]> {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const [playersResult, gamesResult, teamsResult] = await Promise.all([
     supabase.from("players").select("id,name").order("name"),
     supabase.from("games").select("player_a1,player_a2,player_b1,player_b2"),
@@ -113,7 +114,7 @@ async function getAdminPlayers(): Promise<AdminPlayerRow[]> {
 }
 
 async function getAdminTeams(): Promise<AdminTeamRow[]> {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const [playersResult, teamsResult, gamesResult] = await Promise.all([
     supabase.from("players").select("id,name"),
     supabase.from("teams").select("id,name,player_1_id,player_2_id").order("name"),

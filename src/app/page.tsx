@@ -2,13 +2,14 @@ import Link from "next/link";
 import { BestTeammates } from "@/components/BestTeammates";
 import { Leaderboard } from "@/components/Leaderboard";
 import { RecentGames } from "@/components/RecentGames";
-import { assertSupabaseEnv, supabase, type Game, type Player } from "@/lib/supabase";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { type Game, type Player } from "@/lib/supabase";
 import { computeBestTeammates, computeLeaderboard, computeRecentGames } from "@/lib/stats";
 
 export const dynamic = "force-dynamic";
 
 async function getDashboardData() {
-  assertSupabaseEnv();
+  const supabase = getSupabaseServerClient();
   const [playersResult, gamesResult] = await Promise.all([
     supabase.from("players").select("id,name,created_at").order("name"),
     supabase.from("games").select("*").order("created_at", { ascending: false }).limit(100),

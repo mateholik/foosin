@@ -39,8 +39,8 @@ Set your Supabase values in `.env.local`:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-# or (Supabase dashboard naming):
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+# Optional: the public key can exist, but should not be able to access tables once RLS is enabled.
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_publishable_key
 ADMIN_PASSWORD=replace_with_shared_admin_password
 ```
