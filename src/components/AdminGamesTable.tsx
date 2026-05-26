@@ -28,6 +28,14 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+function toDateTimeLocalValue(value: string) {
+  const date = new Date(value);
+  const pad = (input: number) => String(input).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
+    date.getHours()
+  )}:${pad(date.getMinutes())}`;
+}
+
 export function AdminGamesTable({ games }: AdminGamesTableProps) {
   const router = useRouter();
   const [busyGameId, setBusyGameId] = useState<string | null>(null);
@@ -39,12 +47,23 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
     const formData = new FormData(event.currentTarget);
     const scoreA = Number(formData.get("scoreA"));
     const scoreB = Number(formData.get("scoreB"));
+    const createdAtRaw = String(formData.get("createdAt") ?? "").trim();
+    let createdAt: string | undefined;
+    if (createdAtRaw) {
+      const parsed = new Date(createdAtRaw);
+      if (Number.isNaN(parsed.getTime())) {
+        toast.error("Invalid date.");
+        setBusyGameId(null);
+        return;
+      }
+      createdAt = parsed.toISOString();
+    }
 
     try {
       const response = await fetch(`/api/admin/games/${gameId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scoreA, scoreB }),
+        body: JSON.stringify({ scoreA, scoreB, ...(createdAt ? { createdAt } : {}) }),
       });
       if (!response.ok) {
         const payload = (await response.json()) as { error?: string };
@@ -93,7 +112,7 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
             <form
               key={game.id}
               onSubmit={(event) => onSave(event, game.id)}
-              className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.5fr_1fr_1fr_auto_auto]"
+              className="grid gap-3 rounded-xl border border-white/10 bg-white/5 p-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr_auto_auto]"
             >
               <div>
                 <p className="text-sm font-semibold text-slate-100">{game.teamA}</p>
@@ -126,6 +145,18 @@ export function AdminGamesTable({ games }: AdminGamesTableProps) {
                   name="scoreB"
                   min={0}
                   defaultValue={game.scoreB}
+                  className="brut-input"
+                  required
+                />
+              </label>
+              <label className="block space-y-2">
+                <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                  Played at
+                </span>
+                <input
+                  type="datetime-local"
+                  name="createdAt"
+                  defaultValue={toDateTimeLocalValue(game.createdAt)}
                   className="brut-input"
                   required
                 />

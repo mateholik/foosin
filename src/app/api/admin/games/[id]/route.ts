@@ -5,6 +5,7 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 type UpdateGameRequestBody = {
   scoreA?: number;
   scoreB?: number;
+  createdAt?: string;
 };
 
 export async function PATCH(
@@ -19,6 +20,7 @@ export async function PATCH(
   const payload = (await request.json()) as UpdateGameRequestBody;
   const scoreA = payload.scoreA;
   const scoreB = payload.scoreB;
+  const createdAt = payload.createdAt;
   const invalidScore =
     typeof scoreA !== "number" ||
     typeof scoreB !== "number" ||
@@ -32,10 +34,25 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid score update." }, { status: 400 });
   }
 
+  let nextCreatedAt: string | undefined;
+  if (typeof createdAt !== "undefined") {
+    if (!createdAt) {
+      return NextResponse.json({ error: "Invalid date update." }, { status: 400 });
+    }
+    const parsed = new Date(createdAt);
+    if (Number.isNaN(parsed.getTime())) {
+      return NextResponse.json({ error: "Invalid date update." }, { status: 400 });
+    }
+    nextCreatedAt = parsed.toISOString();
+  }
+
   const { id } = await params;
+  const updatePayload: Record<string, unknown> = { score_a: scoreA, score_b: scoreB };
+  if (nextCreatedAt) updatePayload.created_at = nextCreatedAt;
+
   const { error } = await supabase
     .from("games")
-    .update({ score_a: scoreA, score_b: scoreB })
+    .update(updatePayload)
     .eq("id", id);
 
   if (error) {
